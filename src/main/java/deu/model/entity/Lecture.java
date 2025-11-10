@@ -27,4 +27,7 @@ public class Lecture implements Serializable {
 
     private String startTime;
     private String endTime;
+    
+    private Integer year; //연도
+    private deu.model.enums.Semester semester; //FISRT(1학기), SECOND(2학기)
 }
