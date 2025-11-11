@@ -28,6 +28,7 @@ public class ReservationManagement extends javax.swing.JPanel {
     private JButton selectedCalendarButton = null;
     private JButton selectedRoomButton = null;
     private JButton selectedFloorButton = null;
+    private deu.view.custom.ButtonRound lectureManageButton;
     
     // 선택된 색상 저장
     public static final Color FLOOR_DEFAULT_COLOR = new Color(255, 255, 255);
@@ -39,6 +40,21 @@ public class ReservationManagement extends javax.swing.JPanel {
      */
     public ReservationManagement() {
         initComponents();
+        // -----------------------------------------------------------
+        //2. [신규] "강의 시간표 관리" 버튼 코드로 직접 생성 및 추가
+        // -----------------------------------------------------------
+        lectureManageButton = new deu.view.custom.ButtonRound();
+        lectureManageButton.setText("강의 시간표 관리");
+        lectureManageButton.setRoundBottomLeft(10);
+        lectureManageButton.setRoundBottomRight(10);
+        lectureManageButton.setRoundTopLeft(10);
+        lectureManageButton.setRoundTopRight(10);
+        
+        // 'reservationListFrameButton'("예약 대기 리스트")의 위치가 (6, 510, 240, 30) 이므로
+        // 이 버튼은 그 바로 위에 (y좌표 510 - 40 = 470) 배치합니다.
+        add(lectureManageButton);
+        lectureManageButton.setBounds(6, 470, 240, 30); // (x, y, width, height)
+        // -----------------------------------------------------------
     }
     
     public ButtonRound createStyledButton(String text, int width, int height) {
@@ -1760,6 +1776,14 @@ public class ReservationManagement extends javax.swing.JPanel {
     }
     public void addReservationListInitListener(AncestorListener listener) {
         reservationList.addAncestorListener(listener);
+    }
+    
+    // -----------------------------------------------------------
+    //3. [신규] 버튼 이벤트 연결 메서드
+    //
+    // -----------------------------------------------------------
+    public void addLectureManageButtonListener(ActionListener listener) {
+        lectureManageButton.addActionListener(listener);
     }
 
     // 필드 값 가져오기

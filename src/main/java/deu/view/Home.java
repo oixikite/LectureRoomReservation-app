@@ -40,6 +40,9 @@ public class Home extends javax.swing.JPanel {
     public static final Color FLOOR_DEFAULT_COLOR = new Color(255, 255, 255);
     public static final Color FLOOR_SELECTED_COLOR = new Color(20, 90, 170);
     public static final Color ROOM_SELECTED_COLOR = new Color(20, 90, 170);
+    
+    // 🎯 [신규] 강의 시간표 관리 버튼 필드 선언
+    private deu.view.custom.ButtonRound lectureManageButton;
 
     public static Home getInstance(String userId, String userPw) {
         if (instance == null) {
@@ -67,6 +70,39 @@ public class Home extends javax.swing.JPanel {
         this.userNumber = userNumber;
         this.userPassword = userPassword;
         initComponents();
+        
+        // -----------------------------------------------------------
+        //[신규] '강의 시간표 관리' 버튼 생성 및 배치
+        // -----------------------------------------------------------
+        
+        //1. 새 버튼 생성 및 스타일 설정 (기존 버튼 스타일 복사)
+        lectureManageButton = new deu.view.custom.ButtonRound();
+        lectureManageButton.setBackground(new java.awt.Color(20, 90, 170));
+        lectureManageButton.setForeground(new java.awt.Color(255, 255, 255));
+        lectureManageButton.setText("강의 시간표 관리");
+        lectureManageButton.setRoundBottomLeft(0);
+        lectureManageButton.setRoundBottomRight(0);
+        lectureManageButton.setRoundTopLeft(0);
+        lectureManageButton.setRoundTopRight(0);
+        
+        //2. 새 버튼을 managerMenu에 추가
+        managerMenu.add(lectureManageButton);
+
+        //3. 기존 버튼들과 새 버튼의 위치/크기를 재조정 (겹치지 않게)
+        //[강의실 예약 관리] | [사용자 관리] | [강의 시간표 관리] | [일반 메뉴]
+        
+        //기존: (160, 10, 180, 30)
+        reservationManagementButton.setBounds(160, 10, 140, 30); 
+        
+        //기존: (339, 10, 180, 30) -> 160+140 = 300
+        userManagementButton.setBounds(300, 10, 140, 30);
+        
+        //신규: 300+140 = 440
+        lectureManageButton.setBounds(440, 10, 140, 30);
+        
+        //기존: (580, 10, 112, 30) -> 440+140 = 580
+        commonMenu.setBounds(580, 10, 112, 30); // 이 버튼은 위치 변경 없음
+        // -----------------------------------------------------------
     }
     public ButtonRound createStyledButton(String text, int width, int height) {
         ButtonRound btn = new ButtonRound();
@@ -1972,6 +2008,14 @@ public class Home extends javax.swing.JPanel {
     public void addCommonMenuListener(ActionListener listener) {
         commonMenu.addActionListener(listener);
     }
+    
+    /**
+     *[신규] 강의 시간표 관리 버튼 리스너 연결
+     */
+    public void addLectureManageButtonListener(ActionListener listener) {
+        lectureManageButton.addActionListener(listener);
+    }
+    
     public void replaceMainContent(JPanel northPanel, JPanel centerPanel) {
         removeAll();
         if (northPanel != null) add(northPanel, BorderLayout.NORTH);

@@ -36,6 +36,7 @@ public class HomeSwingController {
         view.addCommonMenuListener(this::showCommonMenu);
         view.addDeleteReservationListner(this::deleteReservation);
         view.addSupportButtonListner(this::handleSupport);
+        view.addLectureManageButtonListener(e -> new LectureSearchView());
 
         view.addMyReservationListInitListener(createMyReservationListInitListener());
         view.addUserReservationCalendarInitListener(createUserReservationCalendarInitListener());

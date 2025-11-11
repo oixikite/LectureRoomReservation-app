@@ -36,7 +36,7 @@ public class LectureSearchView extends JFrame {
     public LectureSearchView() {
         setTitle("강의실 강의 조회 및 관리");
         setSize(700, 500);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
         //상단 입력 패널
@@ -332,7 +332,8 @@ public class LectureSearchView extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(LectureSearchView::new);
-    }
+    //단독 실행용 main
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(LectureSearchView::new);
+//    }
 }
