@@ -49,33 +49,6 @@ public class ReservationManagementSwingController {
         view.addReservationFrameButtonListener(this::reservationListFrameButton);
         view.addReservationFrameRefreshButtonListener(this::reservationListPanelRefreshButton);
         view.addReservationListInitListener(createReservationListPanelInitListener());
-        
-        // -----------------------------------------------------------
-        //'강의 시간표 관리' 버튼 리스너 (자동 새로고침 기능 추가)
-        // -----------------------------------------------------------
-        view.addLectureManageButtonListener(e -> {
-            // 1. CUD 창(LectureSearchView)을 엽니다.
-            LectureSearchView lectureView = new LectureSearchView();
-
-            // 2. 이 창이 닫힐 때(windowClosed) 실행될 이벤트를 추가합니다.
-            lectureView.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent we) {
-                    System.out.println("[Refresh] CUD 창이 닫혔습니다. 캘린더 새로고침을 시도합니다.");
-                    
-                    // 3. 현재 ReservationManagement 뷰에 선택된 강의실 버튼을 가져옵니다.
-                    ButtonRound selectedRoomButton = (ButtonRound) view.getSelectedRoomButton();
-                    
-                    // 4. 만약 선택된 강의실이 있다면 (캘린더가 이미 한번 로드된 상태라면)
-                    if (selectedRoomButton != null) {
-                        System.out.println("[Refresh] " + selectedRoomButton.getText() + " 버튼을 강제 클릭하여 새로고침합니다.");
-                        
-                        // 5. 그 버튼을 코드로 "클릭"해서 캘린더 새로고침(updateCalendarWithDummyData)을 강제로 실행시킵니다.
-                        selectedRoomButton.doClick();
-                    }
-                }
-            });
-        });
     
     }
 

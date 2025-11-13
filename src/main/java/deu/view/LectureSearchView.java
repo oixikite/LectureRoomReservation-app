@@ -24,17 +24,17 @@ public class LectureSearchView extends JFrame {
     private DefaultTableModel tableModel;
 
     // CUD 버튼 필드
-    private JButton searchButton, addButton, editButton, deleteButton;
+    private JButton searchButton, addButton, editButton, deleteButton, backButton;
 
     // 서버 정보
     private static final String HOST = "127.0.0.1";
     private static final int PORT = 8080;
     
-    //[신규] 조회된 강의 목록 원본을 저장할 리스트
+    //조회된 강의 목록 원본을 저장할 리스트
     private List<Lecture> currentLectureList = new ArrayList<>();
 
-    public LectureSearchView() {
-        setTitle("강의실 강의 조회 및 관리");
+    public LectureSearchView(String year, String semester) {
+        setTitle("강의실 강의 조회 및 관리 (" + year + " / " + semester + ")");
         setSize(700, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
@@ -47,11 +47,16 @@ public class LectureSearchView extends JFrame {
         inputPanel.add(new JLabel("층"));
         inputPanel.add(new JLabel("호실"));
 
-        yearField = new JTextField("2025");
-        semesterField = new JTextField("FIRST");
-        buildingField = new JTextField("정보관");
+        //생성자에서 값 받아오기
+        yearField = new JTextField(year);
+        semesterField = new JTextField(semester);
+        buildingField = new JTextField("정보관"); // (이하 기본값)
         floorField = new JTextField("9");
         roomField = new JTextField("911");
+        
+        //학년도/학기는 수정하지 못하도록 잠금
+        yearField.setEditable(false);
+        semesterField.setEditable(false);
 
         inputPanel.add(yearField);
         inputPanel.add(semesterField);
@@ -73,11 +78,14 @@ public class LectureSearchView extends JFrame {
         addButton = new JButton("강의 추가");
         editButton = new JButton("강의 수정");
         deleteButton = new JButton("강의 삭제");
+        backButton = new JButton("학기 변경");
 
         buttonPanel.add(searchButton);
         buttonPanel.add(addButton);
         buttonPanel.add(editButton);
         buttonPanel.add(deleteButton);
+        buttonPanel.add(Box.createHorizontalStrut(20));
+        buttonPanel.add(backButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -86,6 +94,7 @@ public class LectureSearchView extends JFrame {
         addButton.addActionListener(this::handleAddAction);
         editButton.addActionListener(this::handleEditAction);
         deleteButton.addActionListener(this::handleDeleteAction);
+        backButton.addActionListener(this::handleBackAction);
 
         setLocationRelativeTo(null);
         setVisible(true);
@@ -108,7 +117,7 @@ public class LectureSearchView extends JFrame {
     }
 
     // ===============================================================
-    //[수정] 조회 버튼 클릭 이벤트 (currentLectureList에 저장)
+    //조회 버튼 클릭 이벤트 (currentLectureList에 저장)
     // ===============================================================
     private void handleSearchAction(ActionEvent e) {
         try {
@@ -150,36 +159,36 @@ public class LectureSearchView extends JFrame {
     }
 
     // ===============================================================
-    //[완성] 추가 버튼 클릭 이벤트
+    //추가 버튼 클릭 이벤트
     // ===============================================================
     private void handleAddAction(ActionEvent e) {
         try {
-            // 1. 현재 조회 중인 강의실 정보를 가져옵니다. (팝업창에 넘겨주기 위해)
+            //현재 조회 중인 강의실 정보를 가져옴. (팝업창에 넘겨주기 위해)
             int year = Integer.parseInt(yearField.getText().trim());
             String semester = semesterField.getText().trim();
             String building = buildingField.getText().trim();
             String floor = floorField.getText().trim();
             String room = roomField.getText().trim();
 
-            // 2. '강의 추가' 팝업창(JDialog)을 생성하고 엽니다.
+            //'강의 추가' 팝업창(JDialog)을 생성하고 염
             LectureEditDialog dialog = new LectureEditDialog(this, year, semester, building, floor, room);
             dialog.setVisible(true); // 사용자가 '저장' 또는 '취소'를 누를 때까지 여기서 멈춤
 
-            // 3. 팝업창이 '저장' 버튼을 눌러 닫혔는지 확인합니다.
+            //팝업창이 '저장' 버튼을 눌러 닫혔는지 확인
             if (dialog.isSaved()) {
-                // 4. 팝업창에서 완성된 Lecture 객체를 가져옵니다.
+                // 팝업창에서 완성된 Lecture 객체를 가져옴
                 Lecture newLecture = dialog.getLecture();
 
-                // 5. 서버에 전송할 DTO를 생성합니다.
+                // 서버에 전송할 DTO를 생성
                 LectureCommandRequest request = new LectureCommandRequest("강의 추가", newLecture);
 
-                // 6. 서버에 전송하고 응답을 받습니다.
+                // 서버에 전송하고 응답을 받음
                 Object response = sendRequestToServer(request);
 
                 if (response instanceof deu.model.dto.response.BasicResponse res) {
                     if ("200".equals(res.code)) {
                         JOptionPane.showMessageDialog(this, (String) res.data); // "강의 추가 성공"
-                        // 7. [중요] 테이블 새로고침
+                        // 테이블 새로고침
                         searchButton.doClick();
                     } else {
                         // (예: 409 - 중복 ID, 409 - 시간 겹침 등 서버가 보낸 메시지)
@@ -189,7 +198,7 @@ public class LectureSearchView extends JFrame {
                     JOptionPane.showMessageDialog(this, "예상치 못한 응답 형식입니다.", "오류", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            // '취소'를 누른 경우 (dialog.isSaved() == false)는 아무것도 하지 않습니다.
+            //'취소'를 누른 경우 (dialog.isSaved() == false)는 아무것도 하지 않음
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "상단의 '연도' 필드를 숫자로 올바르게 입력하세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
@@ -200,10 +209,10 @@ public class LectureSearchView extends JFrame {
     }
 
     // ===============================================================
-    //[완성] 수정 버튼 클릭 이벤트
+    // 수정 버튼 클릭 이벤트
     // ===============================================================
     private void handleEditAction(ActionEvent e) {
-        // 1. 테이블에서 선택된 행 확인
+        // 테이블에서 선택된 행 확인
         int selectedRow = lectureTable.getSelectedRow();
 
         if (selectedRow == -1) {
@@ -212,7 +221,7 @@ public class LectureSearchView extends JFrame {
         }
 
         try {
-            // 2. [중요] 테이블의 '강의 코드'로 원본 리스트(currentLectureList)에서 실제 Lecture 객체 찾기
+            // 테이블의 '강의 코드'로 원본 리스트(currentLectureList)에서 실제 Lecture 객체 찾기
             String selectedLectureId = (String) tableModel.getValueAt(selectedRow, 0);
             
             Lecture lectureToEdit = null;
@@ -228,16 +237,16 @@ public class LectureSearchView extends JFrame {
                 return;
             }
             
-            // 3. '수정' 모드로 팝업창(JDialog) 열기 (기존 객체를 넘겨줌)
+            // '수정' 모드로 팝업창(JDialog) 열기 (기존 객체를 넘겨줌)
             LectureEditDialog dialog = new LectureEditDialog(this, lectureToEdit);
             dialog.setVisible(true);
 
-            // 4. '저장' 버튼을 눌렀다면
+            // '저장' 버튼을 눌렀다면
             if (dialog.isSaved()) {
                 // 5. 수정된 Lecture 객체를 가져옴
                 Lecture updatedLecture = dialog.getLecture();
 
-                // 6. 서버에 "강의 수정" 요청 전송
+                // 서버에 "강의 수정" 요청 전송
                 LectureCommandRequest request = new LectureCommandRequest("강의 수정", updatedLecture);
                 Object response = sendRequestToServer(request);
 
@@ -264,42 +273,42 @@ public class LectureSearchView extends JFrame {
 
 
     // ===============================================================
-    //[완성] 삭제 버튼 클릭 이벤트 (BasicResponse.code 사용)
+    //삭제 버튼 클릭 이벤트 (BasicResponse.code 사용)
     // ===============================================================
     private void handleDeleteAction(ActionEvent e) {
-        // 1. JTable에서 선택된 행을 확인합니다.
+        // Table에서 선택된 행을 확인
         int selectedRow = lectureTable.getSelectedRow();
 
-        // 2. 선택이 안 된 경우
+        // 선택이 안 된 경우
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "삭제할 강의를 테이블에서 선택하세요.", "경고", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // 3. 선택된 행의 '강의 코드'(ID)를 가져옵니다. (0번째 열)
+        // 선택된 행의 '강의 코드'(ID)를 가져옴. (0번째 열)
         String lectureId = (String) tableModel.getValueAt(selectedRow, 0);
         String lectureTitle = (String) tableModel.getValueAt(selectedRow, 1);
 
-        // 4. 사용자에게 삭제 의사를 재확인합니다.
+        // 사용자에게 삭제 의사를 재확인
         int result = JOptionPane.showConfirmDialog(this,
                 "[" + lectureId + "] " + lectureTitle + "\n강의를 정말 삭제하시겠습니까?",
                 "삭제 확인",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
 
-        // 5. 사용자가 '예'를 누른 경우
+        // 사용자가 '예'를 누른 경우
         if (result == JOptionPane.YES_OPTION) {
             try {
-                // 6. "강의 삭제" 커맨드와 'lectureId'를 담아 DTO 생성
+                // "강의 삭제" 커맨드와 'lectureId'를 담아 DTO 생성
                 LectureCommandRequest request = new LectureCommandRequest("강의 삭제", lectureId);
 
-                // 7. 서버에 전송 및 응답 받기
+                // 서버에 전송 및 응답 받기
                 Object response = sendRequestToServer(request);
 
                 if (response instanceof deu.model.dto.response.BasicResponse res) {
                     if ("200".equals(res.code)) {
                         JOptionPane.showMessageDialog(this, (String) res.data); // "강의가 성공적으로 삭제되었습니다."
-                        // 8. [중요] 테이블 새로고침 (조회 버튼 다시 누르기)
+                        // 테이블 새로고침 (조회 버튼 다시 누르기)
                         searchButton.doClick();
                     } else {
                         // (예: 404 - 삭제할 강의 못찾음, 500 - 서버 오류)
@@ -330,6 +339,30 @@ public class LectureSearchView extends JFrame {
                     lec.getEndTime()
             });
         }
+    }
+    
+    
+    // ===============================================================
+    // '학기 변경' (뒤로가기) 버튼 이벤트 핸들러
+    // ===============================================================
+    private void handleBackAction(ActionEvent e) {
+        // 학기 선택 팝업창을 다시 염
+        // 'this'는 현재 JFrame이므로 부모(parent)로 사용
+        YearSemesterSelectDialog dialog = new YearSemesterSelectDialog(this);
+        dialog.setVisible(true); // 사용자가 '확인'/'취소'를 누를 때까지 대기
+
+        // '확인' 버튼을 눌렀다면
+        if (dialog.isConfirmed()) {
+            String year = dialog.getSelectedYear();
+            String semester = dialog.getSelectedSemester();
+            
+            // '새로운' 학기로 CUD 뷰를 염
+            new LectureSearchView(year, semester);
+            
+            // 그리고 *현재* CUD 창은 닫기
+            this.dispose();
+        }
+        // '취소'를 누른 경우: 아무것도 하지 않고, 현재 창을 그대로 유지
     }
 
     //단독 실행용 main

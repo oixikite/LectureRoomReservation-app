@@ -36,7 +36,28 @@ public class HomeSwingController {
         view.addCommonMenuListener(this::showCommonMenu);
         view.addDeleteReservationListner(this::deleteReservation);
         view.addSupportButtonListner(this::handleSupport);
-        view.addLectureManageButtonListener(e -> new LectureSearchView());
+        
+        
+        //'강의 시간표 관리' 버튼 리스너 (팝업창 호출)
+        // -----------------------------------------------------------
+        view.addLectureManageButtonListener(e -> {
+            //부모 프레임(Home 뷰가 속한 JFrame)을 찾기
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(view);
+
+            //학기 선택 팝업창 열기
+            YearSemesterSelectDialog dialog = new YearSemesterSelectDialog(topFrame);
+            dialog.setVisible(true); // 사용자가 '확인'을 누를 때까지 대기
+
+            //'확인'을 눌렀다면
+            if (dialog.isConfirmed()) {
+                String year = dialog.getSelectedYear();
+                String semester = dialog.getSelectedSemester();
+                
+                // 4. 선택된 학년도/학기로 CUD 뷰를 염
+                new LectureSearchView(year, semester);
+            }
+        });
+        
 
         view.addMyReservationListInitListener(createMyReservationListInitListener());
         view.addUserReservationCalendarInitListener(createUserReservationCalendarInitListener());
