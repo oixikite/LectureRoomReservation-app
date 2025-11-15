@@ -67,4 +67,32 @@ public class NotificationClientController {
         }
         return new ArrayList<>(); // 실패 시 빈 리스트 반환
     }
+    
+    /**
+     * 서버에 '모든 알림 내역'을 요청 (알림함용)
+     */
+    public List<NotificationDTO> getAllMyNotifications(String userId) {
+        try (
+            Socket socket = new Socket(host, port);
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream())
+        ) {
+            // 커맨드를 "알림 전체 조회"로 변경
+            NotificationCommandRequest req = new NotificationCommandRequest("알림 전체 조회", userId);
+            
+            out.writeObject(req);
+            out.flush();
+
+            Object response = in.readObject();
+
+            if (response instanceof BasicResponse basicResponse) {
+                if ("200".equals(basicResponse.code) && basicResponse.data instanceof List) {
+                    return (List<NotificationDTO>) basicResponse.data;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("[NotificationClientController] 전체 알림 조회 실패: " + e.getMessage());
+        }
+        return new ArrayList<>();
+    }
 }

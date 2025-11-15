@@ -41,8 +41,10 @@ public class Home extends javax.swing.JPanel {
     public static final Color FLOOR_SELECTED_COLOR = new Color(20, 90, 170);
     public static final Color ROOM_SELECTED_COLOR = new Color(20, 90, 170);
     
-    // 🎯 [신규] 강의 시간표 관리 버튼 필드 선언
+    //강의 시간표 관리 버튼 필드 선언
     private deu.view.custom.ButtonRound lectureManageButton;
+    //알림함 버튼 필드
+    private deu.view.custom.ButtonRound notificationHistoryButton;
 
     public static Home getInstance(String userId, String userPw) {
         if (instance == null) {
@@ -72,7 +74,7 @@ public class Home extends javax.swing.JPanel {
         initComponents();
         
         // -----------------------------------------------------------
-        //[신규] '강의 시간표 관리' 버튼 생성 및 배치
+        // '강의 시간표 관리' 버튼 생성 및 배치
         // -----------------------------------------------------------
         
         //1. 새 버튼 생성 및 스타일 설정 (기존 버튼 스타일 복사)
@@ -103,6 +105,28 @@ public class Home extends javax.swing.JPanel {
         //기존: (580, 10, 112, 30) -> 440+140 = 580
         commonMenu.setBounds(580, 10, 112, 30); // 이 버튼은 위치 변경 없음
         // -----------------------------------------------------------
+        
+        // ===========================================================
+        // '알림함' 버튼 생성 및 배치 
+        // ===========================================================
+        // 버튼 생성 및 스타일 설정
+        notificationHistoryButton = new deu.view.custom.ButtonRound();
+        notificationHistoryButton.setBackground(new java.awt.Color(255, 153, 0)); // 주황색 (눈에 띄게)
+        notificationHistoryButton.setForeground(new java.awt.Color(255, 255, 255));
+        notificationHistoryButton.setText("알림함");
+        notificationHistoryButton.setRoundBottomLeft(10);
+        notificationHistoryButton.setRoundBottomRight(10);
+        notificationHistoryButton.setRoundTopLeft(10);
+        notificationHistoryButton.setRoundTopRight(10);
+        
+        // 버튼 위치 및 크기 설정
+        // (메뉴 패널의 빈 공간에 배치
+        notificationHistoryButton.setBounds(720, 10, 80, 30);
+        
+        //메뉴 패널에 추가
+        menu.add(notificationHistoryButton);
+        
+        // ===========================================================
     }
     public ButtonRound createStyledButton(String text, int width, int height) {
         ButtonRound btn = new ButtonRound();
@@ -2010,10 +2034,17 @@ public class Home extends javax.swing.JPanel {
     }
     
     /**
-     *[신규] 강의 시간표 관리 버튼 리스너 연결
+     *강의 시간표 관리 버튼 리스너 연결
      */
     public void addLectureManageButtonListener(ActionListener listener) {
         lectureManageButton.addActionListener(listener);
+    }
+    
+    /**
+     *알림함 버튼 리스너 연결
+     */
+    public void addNotificationHistoryListener(ActionListener listener) {
+        notificationHistoryButton.addActionListener(listener);
     }
     
     public void replaceMainContent(JPanel northPanel, JPanel centerPanel) {

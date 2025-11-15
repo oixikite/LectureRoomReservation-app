@@ -19,6 +19,7 @@ import javax.swing.Timer;
 import deu.controller.business.NotificationClientController;
 import deu.model.dto.response.NotificationDTO;
 import java.util.List;
+import deu.view.NotificationHistoryDialog;
 
 public class HomeSwingController {
 
@@ -47,7 +48,7 @@ public class HomeSwingController {
         view.addCommonMenuListener(this::showCommonMenu);
         view.addDeleteReservationListner(this::deleteReservation);
         view.addSupportButtonListner(this::handleSupport);
-        
+        view.addNotificationHistoryListener(this::showNotificationHistory);
         
         //'강의 시간표 관리' 버튼 리스너 (팝업창 호출)
         // -----------------------------------------------------------
@@ -498,6 +499,39 @@ public class HomeSwingController {
             }
         };
 
+        worker.execute();
+    }
+    
+    //알림함 버튼 클릭 시 실행될 메서드
+    private void showNotificationHistory(ActionEvent e) {
+        String userId = view.getUserNumber();
+        
+        //서버에서 전체 알림 내역 가져오기 (백그라운드 작업)
+        SwingWorker<List<NotificationDTO>, Void> worker = new SwingWorker<>() {
+            @Override
+            protected List<NotificationDTO> doInBackground() {
+                // 4단계에서 만든 '전체 알림 조회' 메서드 호출
+                return notificationController.getAllMyNotifications(userId);
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    List<NotificationDTO> history = get();
+                    
+                    // 가져온 데이터로 팝업창(Dialog) 띄우기
+                    JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(view);
+                    
+                    //NotificationHistoryDialog 생성 및 표시
+                    NotificationHistoryDialog dialog = new NotificationHistoryDialog(parentFrame, history);
+                    dialog.setVisible(true);
+                    
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "알림 내역을 불러오지 못했습니다.");
+                    ex.printStackTrace();
+                }
+            }
+        };
         worker.execute();
     }
 
