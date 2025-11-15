@@ -15,16 +15,27 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Timer;
+import deu.controller.business.NotificationClientController;
+import deu.model.dto.response.NotificationDTO;
+import java.util.List;
+
 public class HomeSwingController {
 
     private final Home view;
     private final UserClientController userClientController;
     private final RoomReservationClientController roomReservationClientController;
+    
+    private final NotificationClientController notificationController = NotificationClientController.getInstance();
+    private Timer notificationTimer;
 
     public HomeSwingController(Home view) {
         this.view = view;
         this.userClientController = UserClientController.getInstance();
         this.roomReservationClientController = RoomReservationClientController.getInstance();
+        
+        //알림 폴링 시작
+        startNotificationPolling();
 
         // 이벤트 연결
         view.addLogoutListener(this::handleLogout);
@@ -62,6 +73,56 @@ public class HomeSwingController {
         view.addMyReservationListInitListener(createMyReservationListInitListener());
         view.addUserReservationCalendarInitListener(createUserReservationCalendarInitListener());
         view.addUserProfileInitListner(createUserProfileInitListener());
+    }
+    
+    // 알림 폴링 시작 메서드
+    private void startNotificationPolling() {
+        int delay = 3000; // 3초 간격
+        notificationTimer = new Timer(delay, e -> {
+            String userId = view.getUserNumber();
+            // 로그인이 안 된 상태면 패스
+            if (userId == null || userId.isEmpty()) return;
+
+            // 백그라운드 스레드(SwingWorker)로 요청 (UI 멈춤 방지)
+            SwingWorker<List<NotificationDTO>, Void> worker = new SwingWorker<>() {
+                @Override
+                protected List<NotificationDTO> doInBackground() {
+                    // 서버에 내 알림이 있는지 확인 (동기식 소켓 요청)
+                    return notificationController.getMyNotifications(userId);
+                }
+
+                @Override
+                protected void done() {
+                    try {
+                        List<NotificationDTO> notifications = get();
+                        if (notifications != null && !notifications.isEmpty()) {
+                            for (NotificationDTO noti : notifications) {
+                                // 알림 팝업 표시
+                                JOptionPane.showMessageDialog(null, 
+                                    noti.getMessage(), 
+                                    "새 알림: " + noti.getTitle(), 
+                                    JOptionPane.INFORMATION_MESSAGE);
+                            }
+                            
+                            // (선택 사항) 알림이 오면 '내 예약 목록' 등을 갱신
+                            refreshMyReservationList();
+                            refreshUserReservationCalendar();
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            };
+            worker.execute();
+        });
+        notificationTimer.start();
+    }
+
+    //로그아웃 시 타이머 중지
+    private void stopNotificationPolling() {
+        if (notificationTimer != null && notificationTimer.isRunning()) {
+            notificationTimer.stop();
+        }
     }
 
     // 개인 별 주간 예약 시간표를 확인하는 기능 =================================================================================
@@ -504,6 +565,10 @@ public class HomeSwingController {
     }
     // 로그아웃 버튼 기능 - 수정 금지
     private void handleLogout(ActionEvent e) {
+        
+        //로그아웃 시 폴링 중단
+        stopNotificationPolling();
+        
         Auth frame = (Auth) SwingUtilities.getWindowAncestor(view);
         BasicResponse result = userClientController.logout(view.getUserNumber(), view.getUserPassword());
 
