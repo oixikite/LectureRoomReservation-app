@@ -15,28 +15,31 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.Timer;
-import deu.controller.business.NotificationClientController;
+import deu.controller.observer.NotificationObserver;
+import deu.service.NotificationPollingService;
+import deu.controller.business.NotificationClientController; // 알림함 전체 조회용
 import deu.model.dto.response.NotificationDTO;
 import java.util.List;
-import deu.view.NotificationHistoryDialog;
 
-public class HomeSwingController {
+//Observer 인터페이스 구현 (implements NotificationObserver)
+public class HomeSwingController implements NotificationObserver {
 
     private final Home view;
     private final UserClientController userClientController;
     private final RoomReservationClientController roomReservationClientController;
     
     private final NotificationClientController notificationController = NotificationClientController.getInstance();
-    private Timer notificationTimer;
+    
 
     public HomeSwingController(Home view) {
         this.view = view;
         this.userClientController = UserClientController.getInstance();
         this.roomReservationClientController = RoomReservationClientController.getInstance();
         
-        //알림 폴링 시작
-        startNotificationPolling();
+        //폴링 서비스 시작 및 옵저버 등록
+        NotificationPollingService pollingService = NotificationPollingService.getInstance();
+        pollingService.addObserver(this); // 나(Controller)에게 알려줌
+        pollingService.start(view.getUserNumber()); // 폴링 시작
 
         // 이벤트 연결
         view.addLogoutListener(this::handleLogout);
@@ -76,55 +79,46 @@ public class HomeSwingController {
         view.addUserProfileInitListner(createUserProfileInitListener());
     }
     
-    // 알림 폴링 시작 메서드
-    private void startNotificationPolling() {
-        int delay = 3000; // 3초 간격
-        notificationTimer = new Timer(delay, e -> {
-            String userId = view.getUserNumber();
-            // 로그인이 안 된 상태면 패스
-            if (userId == null || userId.isEmpty()) return;
-
-            // 백그라운드 스레드(SwingWorker)로 요청 (UI 멈춤 방지)
-            SwingWorker<List<NotificationDTO>, Void> worker = new SwingWorker<>() {
-                @Override
-                protected List<NotificationDTO> doInBackground() {
-                    // 서버에 내 알림이 있는지 확인 (동기식 소켓 요청)
-                    return notificationController.getMyNotifications(userId);
-                }
-
-                @Override
-                protected void done() {
-                    try {
-                        List<NotificationDTO> notifications = get();
-                        if (notifications != null && !notifications.isEmpty()) {
-                            for (NotificationDTO noti : notifications) {
-                                // 알림 팝업 표시
-                                JOptionPane.showMessageDialog(null, 
-                                    noti.getMessage(), 
-                                    "새 알림: " + noti.getTitle(), 
-                                    JOptionPane.INFORMATION_MESSAGE);
-                            }
-                            
-                            // (선택 사항) 알림이 오면 '내 예약 목록' 등을 갱신
-                            refreshMyReservationList();
-                            refreshUserReservationCalendar();
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            };
-            worker.execute();
-        });
-        notificationTimer.start();
-    }
-
-    //로그아웃 시 타이머 중지
-    private void stopNotificationPolling() {
-        if (notificationTimer != null && notificationTimer.isRunning()) {
-            notificationTimer.stop();
+   //Observer 인터페이스 메서드 구현 (알림이 오면 자동 실행됨)
+    @Override
+    public void onNotificationReceived(List<NotificationDTO> notifications) {
+        for (NotificationDTO noti : notifications) {
+            // 알림 팝업 표시
+            JOptionPane.showMessageDialog(null, 
+                noti.getMessage(), 
+                "새 알림: " + noti.getTitle(), 
+                JOptionPane.INFORMATION_MESSAGE);
         }
+        
+        //알림이 오면 데이터 갱신
+        refreshMyReservationList();
+        refreshUserReservationCalendar();
     }
+
+    //[알림함] 버튼 클릭 시 실행될 메서드
+    private void showNotificationHistory(ActionEvent e) {
+        String userId = view.getUserNumber();
+        SwingWorker<List<NotificationDTO>, Void> worker = new SwingWorker<>() {
+            @Override
+            protected List<NotificationDTO> doInBackground() {
+                return notificationController.getAllMyNotifications(userId);
+            }
+            @Override
+            protected void done() {
+                try {
+                    List<NotificationDTO> history = get();
+                    JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(view);
+                    NotificationHistoryDialog dialog = new NotificationHistoryDialog(parentFrame, history);
+                    dialog.setVisible(true);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "알림 내역을 불러오지 못했습니다.");
+                    ex.printStackTrace();
+                }
+            }
+        };
+        worker.execute();
+    }
+
 
     // 개인 별 주간 예약 시간표를 확인하는 기능 =================================================================================
 
@@ -502,39 +496,6 @@ public class HomeSwingController {
         worker.execute();
     }
     
-    //알림함 버튼 클릭 시 실행될 메서드
-    private void showNotificationHistory(ActionEvent e) {
-        String userId = view.getUserNumber();
-        
-        //서버에서 전체 알림 내역 가져오기 (백그라운드 작업)
-        SwingWorker<List<NotificationDTO>, Void> worker = new SwingWorker<>() {
-            @Override
-            protected List<NotificationDTO> doInBackground() {
-                // 4단계에서 만든 '전체 알림 조회' 메서드 호출
-                return notificationController.getAllMyNotifications(userId);
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    List<NotificationDTO> history = get();
-                    
-                    // 가져온 데이터로 팝업창(Dialog) 띄우기
-                    JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(view);
-                    
-                    //NotificationHistoryDialog 생성 및 표시
-                    NotificationHistoryDialog dialog = new NotificationHistoryDialog(parentFrame, history);
-                    dialog.setVisible(true);
-                    
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "알림 내역을 불러오지 못했습니다.");
-                    ex.printStackTrace();
-                }
-            }
-        };
-        worker.execute();
-    }
-
     // 수정 안해도 되는 부분 ===========================================================================================
 
     // 내 예약 리스트가 생성될 때 갱신되는 기능 - 수정 금지
@@ -601,7 +562,7 @@ public class HomeSwingController {
     private void handleLogout(ActionEvent e) {
         
         //로그아웃 시 폴링 중단
-        stopNotificationPolling();
+        NotificationPollingService.getInstance().stop();
         
         Auth frame = (Auth) SwingUtilities.getWindowAncestor(view);
         BasicResponse result = userClientController.logout(view.getUserNumber(), view.getUserPassword());
