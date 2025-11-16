@@ -338,20 +338,68 @@ public class ReservationSwingController {
                         continue;
                     }
 
-                    // 2. 예약이 있는 경우 (선택 불가)
-                    if (reservationSchedule != null && reservationSchedule[day][period] != null) {
-                        RoomReservation r = reservationSchedule[day][period];
-                        dayBtn.setEnabled(false);
-                        dayBtn.setRoomReservation(r);
-                        dayBtn.setText(r.getTitle());
+                    // 2. 예약이 있는 경우 (선택 가능하도록 변경됨)
+if (reservationSchedule != null && reservationSchedule[day][period] != null) {
+    RoomReservation r = reservationSchedule[day][period];
+    dayBtn.setRoomReservation(r);
+    dayBtn.setText(r.getTitle());
 
-                        if ("승인".equals(r.getStatus())) {
-                            dayBtn.setBackground(new Color(20, 112, 61)); // 초록
-                        } else {
-                            dayBtn.setBackground(new Color(241, 196, 15)); // 노란색 (대기)
-                        }
-                        continue;
-                    }
+    // 색상만 표시 (대기 or 승인)
+    if ("승인".equals(r.getStatus())) {
+        dayBtn.setBackground(new Color(20, 112, 61)); // 초록색
+    } else {
+        dayBtn.setBackground(new Color(241, 196, 15)); // 노란색 (대기)
+    }
+
+    dayBtn.setEnabled(true); // ★ 핵심: 노란색/초록색도 클릭 가능!
+    
+    // 선택 이벤트 등록
+    dayBtn.addActionListener(ev -> {
+        TimeSlotButton source = (TimeSlotButton) ev.getSource();
+        TimeSlotButton prev = (TimeSlotButton) view.getSelectedCalendarButton();
+
+        // 이미 선택된 버튼을 다시 누르면 해제
+        if (prev == source) {
+            if ("승인".equals(r.getStatus())) {
+                source.setBackground(new Color(20, 112, 61));  
+            } else {
+                source.setBackground(new Color(241, 196, 15)); 
+            }
+            view.setSelectedCalendarButton(null);
+            view.getReservationDateField().setText("");
+            view.getReservationTimeField().setText("");
+            return;
+        }
+
+        // 이전 선택 복원
+        if (prev != null) {
+            RoomReservation prevR = prev.getRoomReservation();
+            if (prevR != null) {
+                if ("승인".equals(prevR.getStatus())) {
+                    prev.setBackground(new Color(20, 112, 61));  
+                } else {
+                    prev.setBackground(new Color(241, 196, 15)); 
+                }
+            } else {
+                prev.setBackground(Color.WHITE);
+            }
+        }
+
+        // 현재 버튼 선택(파란색)
+        source.setBackground(new Color(30, 144, 255));
+        view.setSelectedCalendarButton(source);
+
+        // 날짜/시간 필드 채우기
+        String[] dateTime = parseDateTimeFromButtonName(source.getName());
+        if (dateTime != null) {
+            view.getReservationDateField().setText(dateTime[0]);
+            view.getReservationTimeField().setText(dateTime[1]);
+        }
+    });
+
+    continue;
+}
+
 
                     // 3. 비어있는 시간대 - 선택 가능
                     dayBtn.setEnabled(true);
