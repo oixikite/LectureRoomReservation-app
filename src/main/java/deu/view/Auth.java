@@ -95,7 +95,6 @@ public class Auth extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("강의실 예약 프로그램");
         setMinimumSize(new java.awt.Dimension(1100, 600));
-        setPreferredSize(new java.awt.Dimension(1100, 630));
         setResizable(false);
         setSize(new java.awt.Dimension(1100, 630));
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -105,18 +104,15 @@ public class Auth extends javax.swing.JFrame {
         login.setToolTipText("");
         login.setMaximumSize(new java.awt.Dimension(1100, 600));
         login.setMinimumSize(new java.awt.Dimension(1100, 600));
-        login.setSize(new java.awt.Dimension(1100, 600));
+        login.setRequestFocusEnabled(false);
+        login.setVerifyInputWhenFocusTarget(false);
         login.setLayout(null);
 
-        login_loginNumberField.setBackground(new java.awt.Color(255, 255, 255));
-        login_loginNumberField.setCaretColor(new java.awt.Color(0, 0, 0));
         login_loginNumberField.setNormalTextColor(java.awt.Color.black);
         login_loginNumberField.setSelectedTextColor(new java.awt.Color(0, 0, 0));
         login.add(login_loginNumberField);
         login_loginNumberField.setBounds(460, 290, 460, 40);
 
-        login_loginPasswordField.setBackground(new java.awt.Color(255, 255, 255));
-        login_loginPasswordField.setCaretColor(new java.awt.Color(0, 0, 0));
         login_loginPasswordField.setNormalTextColor(java.awt.Color.black);
         login_loginPasswordField.setRound(15);
         login_loginPasswordField.setSelectedTextColor(new java.awt.Color(0, 0, 0));
@@ -156,21 +152,21 @@ public class Auth extends javax.swing.JFrame {
         login_loginNumberLabel.setForeground(new java.awt.Color(153, 153, 153));
         login_loginNumberLabel.setText("Student Number or Professor Number or Manager Number");
         login.add(login_loginNumberLabel);
-        login_loginNumberLabel.setBounds(460, 270, 380, 18);
+        login_loginNumberLabel.setBounds(460, 270, 380, 20);
 
         login_loginPasswordLabel.setBackground(new java.awt.Color(255, 255, 255));
         login_loginPasswordLabel.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         login_loginPasswordLabel.setForeground(new java.awt.Color(153, 153, 153));
         login_loginPasswordLabel.setText("Password");
         login.add(login_loginPasswordLabel);
-        login_loginPasswordLabel.setBounds(460, 350, 170, 18);
+        login_loginPasswordLabel.setBounds(460, 350, 170, 20);
 
         login_loginTitle.setBackground(new java.awt.Color(5, 5, 5));
         login_loginTitle.setFont(new java.awt.Font("Helvetica", 1, 24)); // NOI18N
         login_loginTitle.setForeground(new java.awt.Color(5, 5, 5));
         login_loginTitle.setText("Login");
         login.add(login_loginTitle);
-        login_loginTitle.setBounds(650, 160, 67, 40);
+        login_loginTitle.setBounds(650, 160, 64, 40);
 
         login_loginDescription.setForeground(new java.awt.Color(153, 153, 153));
         login_loginDescription.setText("Login into your account LectureRoomReservationSystem");
@@ -224,7 +220,7 @@ public class Auth extends javax.swing.JFrame {
         login_githubClientButton.setRoundTopLeft(10);
         login_githubClientButton.setRoundTopRight(10);
         teamPanel1.add(login_githubClientButton);
-        login_githubClientButton.setBounds(70, 38, 170, 20);
+        login_githubClientButton.setBounds(70, 38, 182, 20);
 
         login.add(teamPanel1);
         teamPanel1.setBounds(10, 520, 250, 70);
@@ -268,11 +264,10 @@ public class Auth extends javax.swing.JFrame {
         login_name2.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         login_name2.setForeground(new java.awt.Color(102, 102, 102));
         login_name2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        login_name2.setText("<html>[ 아이디: m-admin ] | [ 비밀번호: admin ] </html>");
+        login_name2.setText("<html>[ 아이디: m-admin ] [ 비밀번호: admin ] </html>");
         teamPanel2.add(login_name2);
-        login_name2.setBounds(0, 30, 250, 40);
+        login_name2.setBounds(20, 30, 220, 30);
 
-        adminAccountLabel.setForeground(new java.awt.Color(0, 0, 0));
         adminAccountLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         adminAccountLabel.setText("관리자 계정");
         teamPanel2.add(adminAccountLabel);
@@ -297,7 +292,6 @@ public class Auth extends javax.swing.JFrame {
         configPanel.add(ipLabel);
         ipLabel.setBounds(13, 10, 220, 20);
 
-        portField.setBackground(new java.awt.Color(255, 255, 255));
         portField.setForeground(new java.awt.Color(0, 0, 0));
         portField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         portField.setRound(10);
@@ -305,7 +299,6 @@ public class Auth extends javax.swing.JFrame {
         configPanel.add(portField);
         portField.setBounds(10, 80, 230, 27);
 
-        hostField.setBackground(new java.awt.Color(255, 255, 255));
         hostField.setForeground(new java.awt.Color(0, 0, 0));
         hostField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         hostField.setRound(10);
@@ -345,16 +338,13 @@ public class Auth extends javax.swing.JFrame {
         signup.setToolTipText("");
         signup.setMaximumSize(new java.awt.Dimension(1100, 600));
         signup.setMinimumSize(new java.awt.Dimension(1100, 600));
-        signup.setSize(new java.awt.Dimension(1100, 600));
         signup.setLayout(null);
 
-        signup_signupNumberField.setBackground(new java.awt.Color(255, 255, 255));
         signup_signupNumberField.setNormalTextColor(java.awt.Color.black);
         signup.add(signup_signupNumberField);
         signup_signupNumberField.setBounds(460, 250, 460, 40);
 
         signup_undoButton.setBackground(new java.awt.Color(204, 204, 204));
-        signup_undoButton.setForeground(new java.awt.Color(0, 0, 0));
         signup_undoButton.setText("취소");
         signup_undoButton.setRoundBottomLeft(0);
         signup_undoButton.setRoundBottomRight(15);
@@ -373,17 +363,14 @@ public class Auth extends javax.swing.JFrame {
         signup.add(signup_signupButton);
         signup_signupButton.setBounds(460, 520, 380, 40);
 
-        signup_signupPasswordField.setBackground(new java.awt.Color(255, 255, 255));
         signup_signupPasswordField.setNormalTextColor(java.awt.Color.black);
         signup.add(signup_signupPasswordField);
         signup_signupPasswordField.setBounds(460, 320, 460, 40);
 
-        signup_signupNameField.setBackground(new java.awt.Color(255, 255, 255));
         signup_signupNameField.setNormalTextColor(java.awt.Color.black);
         signup.add(signup_signupNameField);
         signup_signupNameField.setBounds(460, 390, 460, 40);
 
-        signup_signupMajorField.setBackground(new java.awt.Color(255, 255, 255));
         signup_signupMajorField.setNormalTextColor(java.awt.Color.black);
         signup.add(signup_signupMajorField);
         signup_signupMajorField.setBounds(460, 460, 460, 40);
@@ -393,35 +380,34 @@ public class Auth extends javax.swing.JFrame {
         signup_signupPasswordLabel.setForeground(new java.awt.Color(153, 153, 153));
         signup_signupPasswordLabel.setText("Password");
         signup.add(signup_signupPasswordLabel);
-        signup_signupPasswordLabel.setBounds(460, 300, 380, 18);
+        signup_signupPasswordLabel.setBounds(460, 300, 380, 20);
 
         signup_signupNameLabel.setBackground(new java.awt.Color(255, 255, 255));
         signup_signupNameLabel.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         signup_signupNameLabel.setForeground(new java.awt.Color(153, 153, 153));
         signup_signupNameLabel.setText("Full Name");
         signup.add(signup_signupNameLabel);
-        signup_signupNameLabel.setBounds(460, 370, 380, 18);
+        signup_signupNameLabel.setBounds(460, 370, 380, 20);
 
         signup_signupMajorLabel.setBackground(new java.awt.Color(255, 255, 255));
         signup_signupMajorLabel.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         signup_signupMajorLabel.setForeground(new java.awt.Color(153, 153, 153));
         signup_signupMajorLabel.setText("Major");
         signup.add(signup_signupMajorLabel);
-        signup_signupMajorLabel.setBounds(460, 440, 380, 18);
+        signup_signupMajorLabel.setBounds(460, 440, 380, 20);
 
         signup_loginNumberLabel.setBackground(new java.awt.Color(255, 255, 255));
         signup_loginNumberLabel.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         signup_loginNumberLabel.setForeground(new java.awt.Color(153, 153, 153));
         signup_loginNumberLabel.setText("Number");
         signup.add(signup_loginNumberLabel);
-        signup_loginNumberLabel.setBounds(460, 230, 380, 18);
+        signup_loginNumberLabel.setBounds(460, 230, 380, 20);
 
         signup_signupTitle.setBackground(new java.awt.Color(0, 0, 0));
         signup_signupTitle.setFont(new java.awt.Font("Helvetica", 1, 24)); // NOI18N
-        signup_signupTitle.setForeground(new java.awt.Color(0, 0, 0));
         signup_signupTitle.setText("Signup");
         signup.add(signup_signupTitle);
-        signup_signupTitle.setBounds(640, 160, 83, 40);
+        signup_signupTitle.setBounds(640, 160, 80, 40);
 
         signup_signupDescription.setForeground(new java.awt.Color(153, 153, 153));
         signup_signupDescription.setText("Please Sign-up before LectureRoom Reservation System");
@@ -438,7 +424,6 @@ public class Auth extends javax.swing.JFrame {
 
         signup_deuProjectTitle.setBackground(new java.awt.Color(204, 204, 204));
         signup_deuProjectTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
-        signup_deuProjectTitle.setForeground(new java.awt.Color(0, 0, 0));
         signup_deuProjectTitle.setText("DEU Project");
         signup.add(signup_deuProjectTitle);
         signup_deuProjectTitle.setBounds(70, 35, 160, 20);
@@ -502,7 +487,7 @@ public class Auth extends javax.swing.JFrame {
         signup_githubClientButton.setRoundTopLeft(10);
         signup_githubClientButton.setRoundTopRight(10);
         teamPanel5.add(signup_githubClientButton);
-        signup_githubClientButton.setBounds(70, 38, 170, 20);
+        signup_githubClientButton.setBounds(70, 38, 182, 20);
 
         signup.add(teamPanel5);
         teamPanel5.setBounds(10, 520, 250, 70);
@@ -522,12 +507,15 @@ public class Auth extends javax.swing.JFrame {
     public void addLoginListener(ActionListener listener) {
         login_loginButton.addActionListener(listener);
     }
+
     public void addSignupListener(ActionListener listener) {
         signup_signupButton.addActionListener(listener);
     }
+
     public void addSwitchToSignupListener(ActionListener listener) {
         login_signupButton.addActionListener(listener);
     }
+
     public void addSwitchToLoginListener(ActionListener listener) {
         signup_undoButton.addActionListener(listener);
     }
@@ -536,14 +524,17 @@ public class Auth extends javax.swing.JFrame {
         login_githubServerButton.addActionListener(listener);
         signup_githubServerButton.addActionListener(listener);
     }
+
     public void addGithubClientButtonListener(ActionListener listener) {
         login_githubClientButton.addActionListener(listener);
         signup_githubClientButton.addActionListener(listener);
     }
+
     public void addSaveConfigButtonListener(ActionListener listener) {
         saveConfigButton.addActionListener(listener);
     }
-    public void addMyConfigPanelInitListener(AncestorListener listener){
+
+    public void addMyConfigPanelInitListener(AncestorListener listener) {
         configPanel.addAncestorListener(listener);
     }
 
@@ -552,15 +543,18 @@ public class Auth extends javax.swing.JFrame {
         CardLayout layout = (CardLayout) getContentPane().getLayout();
         layout.show(getContentPane(), name);
     }
+
     public void addPanel(Component comp, String name) {
         getContentPane().add(comp, name);
     }
+
     public void clearSignupFields() {
         signup_signupNumberField.setText("");
         signup_signupPasswordField.setText("");
         signup_signupNameField.setText("");
         signup_signupMajorField.setText("");
     }
+
     public void transitionToHome(String userId, String userPw) {
         // Home 인스턴스가 null이면 새로 생성
         Home homePanel = Home.getInstance();
@@ -579,14 +573,17 @@ public class Auth extends javax.swing.JFrame {
         addPanel(homePanel, "home");
         showPanel("home");
     }
+
     public void switchToLoginPanel() {
         clearSignupFields();
         showPanel("login");
     }
+
     public void switchToSignupPanel() {
         clearSignupFields();
         showPanel("signup");
     }
+
     // 관리자 패널 허용 여부 기눙 - 수정 금지
     private void checkManagementAuthority(Home view) {
         view.getUserNumber()
@@ -600,18 +597,23 @@ public class Auth extends javax.swing.JFrame {
     public String getSignupId() {
         return signup_signupNumberField.getText().trim();
     }
+
     public String getSignupPassword() {
         return signup_signupPasswordField.getText().trim();
     }
+
     public String getSignupName() {
         return signup_signupNameField.getText().trim();
     }
+
     public String getSignupMajor() {
         return signup_signupMajorField.getText().trim();
     }
+
     public String getLoginId() {
         return login_loginNumberField.getText().trim();
     }
+
     public String getLoginPassword() {
         return new String(login_loginPasswordField.getPassword()).trim();
     }
@@ -625,6 +627,7 @@ public class Auth extends javax.swing.JFrame {
                 JOptionPane.ERROR_MESSAGE
         );
     }
+
     public void showSuccess(String message) {
         JOptionPane.showMessageDialog(
                 this,

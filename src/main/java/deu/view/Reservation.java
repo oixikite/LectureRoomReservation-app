@@ -231,10 +231,17 @@ public class Reservation extends javax.swing.JPanel {
         time10 = new javax.swing.JLabel();
         time11 = new javax.swing.JLabel();
         time12 = new javax.swing.JLabel();
+        monthlyViewButton = new javax.swing.JButton();
+        weeklyViewButton = new javax.swing.JButton();
+        dailyViewButton = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setMaximumSize(new java.awt.Dimension(1100, 550));
-        setMinimumSize(new java.awt.Dimension(1100, 550));
+        setMaximumSize(new java.awt.Dimension(1100, 600));
+        setMinimumSize(new java.awt.Dimension(1100, 600));
+        setOpaque(false);
+        setPreferredSize(new java.awt.Dimension(1200, 650));
+        setRequestFocusEnabled(false);
+        setVerifyInputWhenFocusTarget(false);
         setLayout(null);
 
         buildingPanel.setBackground(new java.awt.Color(20, 90, 170));
@@ -306,6 +313,7 @@ public class Reservation extends javax.swing.JPanel {
         myReservationCalendar.setRoundBottomRight(15);
         myReservationCalendar.setRoundTopLeft(15);
         myReservationCalendar.setRoundTopRight(15);
+        myReservationCalendar.setVerifyInputWhenFocusTarget(false);
         myReservationCalendar.setLayout(null);
 
         reservationInformationPanel.setBackground(new java.awt.Color(20, 90, 170));
@@ -319,7 +327,7 @@ public class Reservation extends javax.swing.JPanel {
         buildingLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         buildingLabel.setText("건물");
         reservationInformationPanel.add(buildingLabel);
-        buildingLabel.setBounds(10, 10, 40, 20);
+        buildingLabel.setBounds(40, 10, 30, 20);
 
         buildingField.setEditable(false);
         buildingField.setBackground(new java.awt.Color(255, 255, 255));
@@ -328,13 +336,13 @@ public class Reservation extends javax.swing.JPanel {
         buildingField.setRound(10);
         buildingField.setSelectedTextColor(new java.awt.Color(0, 0, 0));
         reservationInformationPanel.add(buildingField);
-        buildingField.setBounds(50, 10, 120, 20);
+        buildingField.setBounds(80, 10, 110, 20);
 
         floorLabel.setForeground(new java.awt.Color(255, 255, 255));
         floorLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         floorLabel.setText("층");
         reservationInformationPanel.add(floorLabel);
-        floorLabel.setBounds(10, 40, 40, 20);
+        floorLabel.setBounds(40, 40, 30, 20);
 
         floorField.setEditable(false);
         floorField.setBackground(new java.awt.Color(255, 255, 255));
@@ -343,13 +351,13 @@ public class Reservation extends javax.swing.JPanel {
         floorField.setRound(10);
         floorField.setSelectedTextColor(new java.awt.Color(0, 0, 0));
         reservationInformationPanel.add(floorField);
-        floorField.setBounds(50, 40, 50, 20);
+        floorField.setBounds(80, 40, 40, 20);
 
         lectureRoomLabel.setForeground(new java.awt.Color(255, 255, 255));
         lectureRoomLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lectureRoomLabel.setText("강의실");
         reservationInformationPanel.add(lectureRoomLabel);
-        lectureRoomLabel.setBounds(180, 10, 40, 20);
+        lectureRoomLabel.setBounds(220, 10, 40, 20);
 
         lectureRoomField.setEditable(false);
         lectureRoomField.setBackground(new java.awt.Color(255, 255, 255));
@@ -358,54 +366,51 @@ public class Reservation extends javax.swing.JPanel {
         lectureRoomField.setRound(10);
         lectureRoomField.setSelectedTextColor(new java.awt.Color(0, 0, 0));
         reservationInformationPanel.add(lectureRoomField);
-        lectureRoomField.setBounds(220, 10, 160, 20);
+        lectureRoomField.setBounds(270, 10, 150, 20);
 
         titleLabel.setForeground(new java.awt.Color(255, 255, 255));
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titleLabel.setText("제목");
         reservationInformationPanel.add(titleLabel);
-        titleLabel.setBounds(380, 10, 40, 20);
+        titleLabel.setBounds(450, 10, 30, 20);
 
-        titleField.setBackground(new java.awt.Color(255, 255, 255));
         titleField.setForeground(new java.awt.Color(0, 0, 0));
         titleField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         titleField.setRound(10);
         titleField.setSelectedTextColor(new java.awt.Color(0, 0, 0));
         reservationInformationPanel.add(titleField);
-        titleField.setBounds(420, 10, 290, 20);
+        titleField.setBounds(490, 10, 210, 20);
 
         descriptionLabel.setForeground(new java.awt.Color(255, 255, 255));
         descriptionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         descriptionLabel.setText("설명");
         reservationInformationPanel.add(descriptionLabel);
-        descriptionLabel.setBounds(380, 40, 40, 20);
+        descriptionLabel.setBounds(450, 40, 30, 20);
 
-        descriptionField.setBackground(new java.awt.Color(255, 255, 255));
         descriptionField.setForeground(new java.awt.Color(0, 0, 0));
         descriptionField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         descriptionField.setRound(10);
         reservationInformationPanel.add(descriptionField);
-        descriptionField.setBounds(420, 40, 290, 20);
+        descriptionField.setBounds(490, 40, 210, 20);
 
         reservationUserNumberLabel.setForeground(new java.awt.Color(255, 255, 255));
         reservationUserNumberLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         reservationUserNumberLabel.setText("시간");
         reservationInformationPanel.add(reservationUserNumberLabel);
-        reservationUserNumberLabel.setBounds(240, 40, 40, 20);
+        reservationUserNumberLabel.setBounds(290, 40, 30, 20);
 
         reservationTimeField.setEditable(false);
         reservationTimeField.setBackground(new java.awt.Color(255, 255, 255));
         reservationTimeField.setForeground(new java.awt.Color(0, 0, 0));
         reservationTimeField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        reservationTimeField.setCaretColor(new java.awt.Color(0, 0, 0));
         reservationTimeField.setRound(10);
         reservationTimeField.setSelectedTextColor(new java.awt.Color(0, 0, 0));
         reservationInformationPanel.add(reservationTimeField);
-        reservationTimeField.setBounds(280, 40, 100, 20);
+        reservationTimeField.setBounds(330, 40, 90, 20);
 
         updateButton.setBackground(new java.awt.Color(0, 102, 255));
         updateButton.setForeground(new java.awt.Color(255, 255, 255));
-        updateButton.setText("예약하기");
+        updateButton.setText("예약");
         updateButton.setBorderColor(null);
         updateButton.setEnabled(false);
         updateButton.setRoundBottomLeft(10);
@@ -413,13 +418,13 @@ public class Reservation extends javax.swing.JPanel {
         updateButton.setRoundTopLeft(10);
         updateButton.setRoundTopRight(10);
         reservationInformationPanel.add(updateButton);
-        updateButton.setBounds(720, 10, 90, 50);
+        updateButton.setBounds(720, 10, 72, 50);
 
         reservationDateLabel.setForeground(new java.awt.Color(255, 255, 255));
         reservationDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         reservationDateLabel.setText("날짜");
         reservationInformationPanel.add(reservationDateLabel);
-        reservationDateLabel.setBounds(100, 40, 40, 20);
+        reservationDateLabel.setBounds(140, 40, 30, 20);
 
         reservationDateField.setEditable(false);
         reservationDateField.setBackground(new java.awt.Color(255, 255, 255));
@@ -428,16 +433,15 @@ public class Reservation extends javax.swing.JPanel {
         reservationDateField.setRound(10);
         reservationDateField.setSelectedTextColor(new java.awt.Color(0, 0, 0));
         reservationInformationPanel.add(reservationDateField);
-        reservationDateField.setBounds(140, 40, 100, 20);
+        reservationDateField.setBounds(180, 40, 90, 20);
 
         myReservationCalendar.add(reservationInformationPanel);
-        reservationInformationPanel.setBounds(10, 10, 820, 70);
+        reservationInformationPanel.setBounds(0, 0, 830, 70);
 
         calendar.setBackground(new java.awt.Color(255, 255, 255));
         calendar.setLayout(new java.awt.GridLayout(13, 7, 3, 3));
 
         day0_0.setBackground(new java.awt.Color(245, 245, 246));
-        day0_0.setForeground(new java.awt.Color(0, 0, 0));
         day0_0.setBorderColor(java.awt.Color.darkGray);
         day0_0.setBorderPainted(true);
         day0_0.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -449,7 +453,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day0_0);
 
         day1_0.setBackground(new java.awt.Color(245, 245, 246));
-        day1_0.setForeground(new java.awt.Color(0, 0, 0));
         day1_0.setBorderColor(java.awt.Color.darkGray);
         day1_0.setBorderPainted(true);
         day1_0.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -461,7 +464,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day1_0);
 
         day2_0.setBackground(new java.awt.Color(245, 245, 246));
-        day2_0.setForeground(new java.awt.Color(0, 0, 0));
         day2_0.setBorderColor(java.awt.Color.darkGray);
         day2_0.setBorderPainted(true);
         day2_0.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -473,7 +475,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day2_0);
 
         day3_0.setBackground(new java.awt.Color(245, 245, 246));
-        day3_0.setForeground(new java.awt.Color(0, 0, 0));
         day3_0.setBorderColor(java.awt.Color.darkGray);
         day3_0.setBorderPainted(true);
         day3_0.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -485,7 +486,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day3_0);
 
         day4_0.setBackground(new java.awt.Color(245, 245, 246));
-        day4_0.setForeground(new java.awt.Color(0, 0, 0));
         day4_0.setBorderColor(java.awt.Color.darkGray);
         day4_0.setBorderPainted(true);
         day4_0.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -497,7 +497,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day4_0);
 
         day5_0.setBackground(new java.awt.Color(245, 245, 246));
-        day5_0.setForeground(new java.awt.Color(0, 0, 0));
         day5_0.setBorderColor(java.awt.Color.darkGray);
         day5_0.setBorderPainted(true);
         day5_0.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -509,7 +508,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day5_0);
 
         day6_0.setBackground(new java.awt.Color(245, 245, 246));
-        day6_0.setForeground(new java.awt.Color(0, 0, 0));
         day6_0.setBorderColor(java.awt.Color.darkGray);
         day6_0.setBorderPainted(true);
         day6_0.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -521,7 +519,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day6_0);
 
         day0_1.setBackground(new java.awt.Color(245, 245, 246));
-        day0_1.setForeground(new java.awt.Color(0, 0, 0));
         day0_1.setBorderColor(java.awt.Color.darkGray);
         day0_1.setBorderPainted(true);
         day0_1.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -533,7 +530,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day0_1);
 
         day1_1.setBackground(new java.awt.Color(245, 245, 246));
-        day1_1.setForeground(new java.awt.Color(0, 0, 0));
         day1_1.setBorderColor(java.awt.Color.darkGray);
         day1_1.setBorderPainted(true);
         day1_1.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -545,7 +541,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day1_1);
 
         day2_1.setBackground(new java.awt.Color(245, 245, 246));
-        day2_1.setForeground(new java.awt.Color(0, 0, 0));
         day2_1.setBorderColor(java.awt.Color.darkGray);
         day2_1.setBorderPainted(true);
         day2_1.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -557,7 +552,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day2_1);
 
         day3_1.setBackground(new java.awt.Color(245, 245, 246));
-        day3_1.setForeground(new java.awt.Color(0, 0, 0));
         day3_1.setBorderColor(java.awt.Color.darkGray);
         day3_1.setBorderPainted(true);
         day3_1.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -569,7 +563,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day3_1);
 
         day4_1.setBackground(new java.awt.Color(245, 245, 246));
-        day4_1.setForeground(new java.awt.Color(0, 0, 0));
         day4_1.setBorderColor(java.awt.Color.darkGray);
         day4_1.setBorderPainted(true);
         day4_1.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -581,7 +574,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day4_1);
 
         day5_1.setBackground(new java.awt.Color(245, 245, 246));
-        day5_1.setForeground(new java.awt.Color(0, 0, 0));
         day5_1.setBorderColor(java.awt.Color.darkGray);
         day5_1.setBorderPainted(true);
         day5_1.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -593,7 +585,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day5_1);
 
         day6_1.setBackground(new java.awt.Color(245, 245, 246));
-        day6_1.setForeground(new java.awt.Color(0, 0, 0));
         day6_1.setBorderColor(java.awt.Color.darkGray);
         day6_1.setBorderPainted(true);
         day6_1.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -605,7 +596,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day6_1);
 
         day0_2.setBackground(new java.awt.Color(245, 245, 246));
-        day0_2.setForeground(new java.awt.Color(0, 0, 0));
         day0_2.setBorderColor(java.awt.Color.darkGray);
         day0_2.setBorderPainted(true);
         day0_2.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -617,7 +607,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day0_2);
 
         day1_2.setBackground(new java.awt.Color(245, 245, 246));
-        day1_2.setForeground(new java.awt.Color(0, 0, 0));
         day1_2.setBorderColor(java.awt.Color.darkGray);
         day1_2.setBorderPainted(true);
         day1_2.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -629,7 +618,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day1_2);
 
         day2_2.setBackground(new java.awt.Color(245, 245, 246));
-        day2_2.setForeground(new java.awt.Color(0, 0, 0));
         day2_2.setBorderColor(java.awt.Color.darkGray);
         day2_2.setBorderPainted(true);
         day2_2.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -641,7 +629,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day2_2);
 
         day3_2.setBackground(new java.awt.Color(245, 245, 246));
-        day3_2.setForeground(new java.awt.Color(0, 0, 0));
         day3_2.setBorderColor(java.awt.Color.darkGray);
         day3_2.setBorderPainted(true);
         day3_2.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -653,7 +640,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day3_2);
 
         day4_2.setBackground(new java.awt.Color(245, 245, 246));
-        day4_2.setForeground(new java.awt.Color(0, 0, 0));
         day4_2.setBorderColor(java.awt.Color.darkGray);
         day4_2.setBorderPainted(true);
         day4_2.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -665,7 +651,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day4_2);
 
         day5_2.setBackground(new java.awt.Color(245, 245, 246));
-        day5_2.setForeground(new java.awt.Color(0, 0, 0));
         day5_2.setBorderColor(java.awt.Color.darkGray);
         day5_2.setBorderPainted(true);
         day5_2.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -677,7 +662,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day5_2);
 
         day6_2.setBackground(new java.awt.Color(245, 245, 246));
-        day6_2.setForeground(new java.awt.Color(0, 0, 0));
         day6_2.setBorderColor(java.awt.Color.darkGray);
         day6_2.setBorderPainted(true);
         day6_2.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -689,7 +673,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day6_2);
 
         day0_3.setBackground(new java.awt.Color(245, 245, 246));
-        day0_3.setForeground(new java.awt.Color(0, 0, 0));
         day0_3.setBorderColor(java.awt.Color.darkGray);
         day0_3.setBorderPainted(true);
         day0_3.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -701,7 +684,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day0_3);
 
         day1_3.setBackground(new java.awt.Color(245, 245, 246));
-        day1_3.setForeground(new java.awt.Color(0, 0, 0));
         day1_3.setBorderColor(java.awt.Color.darkGray);
         day1_3.setBorderPainted(true);
         day1_3.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -713,7 +695,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day1_3);
 
         day2_3.setBackground(new java.awt.Color(245, 245, 246));
-        day2_3.setForeground(new java.awt.Color(0, 0, 0));
         day2_3.setBorderColor(java.awt.Color.darkGray);
         day2_3.setBorderPainted(true);
         day2_3.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -725,7 +706,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day2_3);
 
         day3_3.setBackground(new java.awt.Color(245, 245, 246));
-        day3_3.setForeground(new java.awt.Color(0, 0, 0));
         day3_3.setBorderColor(java.awt.Color.darkGray);
         day3_3.setBorderPainted(true);
         day3_3.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -737,7 +717,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day3_3);
 
         day4_3.setBackground(new java.awt.Color(245, 245, 246));
-        day4_3.setForeground(new java.awt.Color(0, 0, 0));
         day4_3.setBorderColor(java.awt.Color.darkGray);
         day4_3.setBorderPainted(true);
         day4_3.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -749,7 +728,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day4_3);
 
         day5_3.setBackground(new java.awt.Color(245, 245, 246));
-        day5_3.setForeground(new java.awt.Color(0, 0, 0));
         day5_3.setBorderColor(java.awt.Color.darkGray);
         day5_3.setBorderPainted(true);
         day5_3.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -761,7 +739,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day5_3);
 
         day6_3.setBackground(new java.awt.Color(245, 245, 246));
-        day6_3.setForeground(new java.awt.Color(0, 0, 0));
         day6_3.setBorderColor(java.awt.Color.darkGray);
         day6_3.setBorderPainted(true);
         day6_3.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -773,7 +750,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day6_3);
 
         day0_4.setBackground(new java.awt.Color(245, 245, 246));
-        day0_4.setForeground(new java.awt.Color(0, 0, 0));
         day0_4.setBorderColor(java.awt.Color.darkGray);
         day0_4.setBorderPainted(true);
         day0_4.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -785,7 +761,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day0_4);
 
         day1_4.setBackground(new java.awt.Color(245, 245, 246));
-        day1_4.setForeground(new java.awt.Color(0, 0, 0));
         day1_4.setBorderColor(java.awt.Color.darkGray);
         day1_4.setBorderPainted(true);
         day1_4.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -797,7 +772,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day1_4);
 
         day2_4.setBackground(new java.awt.Color(245, 245, 246));
-        day2_4.setForeground(new java.awt.Color(0, 0, 0));
         day2_4.setBorderColor(java.awt.Color.darkGray);
         day2_4.setBorderPainted(true);
         day2_4.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -809,7 +783,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day2_4);
 
         day3_4.setBackground(new java.awt.Color(245, 245, 246));
-        day3_4.setForeground(new java.awt.Color(0, 0, 0));
         day3_4.setBorderColor(java.awt.Color.darkGray);
         day3_4.setBorderPainted(true);
         day3_4.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -821,7 +794,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day3_4);
 
         day4_4.setBackground(new java.awt.Color(245, 245, 246));
-        day4_4.setForeground(new java.awt.Color(0, 0, 0));
         day4_4.setBorderColor(java.awt.Color.darkGray);
         day4_4.setBorderPainted(true);
         day4_4.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -833,7 +805,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day4_4);
 
         day5_4.setBackground(new java.awt.Color(245, 245, 246));
-        day5_4.setForeground(new java.awt.Color(0, 0, 0));
         day5_4.setBorderColor(java.awt.Color.darkGray);
         day5_4.setBorderPainted(true);
         day5_4.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -845,7 +816,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day5_4);
 
         day6_4.setBackground(new java.awt.Color(245, 245, 246));
-        day6_4.setForeground(new java.awt.Color(0, 0, 0));
         day6_4.setBorderColor(java.awt.Color.darkGray);
         day6_4.setBorderPainted(true);
         day6_4.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -857,7 +827,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day6_4);
 
         day0_5.setBackground(new java.awt.Color(245, 245, 246));
-        day0_5.setForeground(new java.awt.Color(0, 0, 0));
         day0_5.setBorderColor(java.awt.Color.darkGray);
         day0_5.setBorderPainted(true);
         day0_5.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -869,7 +838,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day0_5);
 
         day1_5.setBackground(new java.awt.Color(245, 245, 246));
-        day1_5.setForeground(new java.awt.Color(0, 0, 0));
         day1_5.setBorderColor(java.awt.Color.darkGray);
         day1_5.setBorderPainted(true);
         day1_5.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -881,7 +849,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day1_5);
 
         day2_5.setBackground(new java.awt.Color(245, 245, 246));
-        day2_5.setForeground(new java.awt.Color(0, 0, 0));
         day2_5.setBorderColor(java.awt.Color.darkGray);
         day2_5.setBorderPainted(true);
         day2_5.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -893,7 +860,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day2_5);
 
         day3_5.setBackground(new java.awt.Color(245, 245, 246));
-        day3_5.setForeground(new java.awt.Color(0, 0, 0));
         day3_5.setBorderColor(java.awt.Color.darkGray);
         day3_5.setBorderPainted(true);
         day3_5.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -905,7 +871,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day3_5);
 
         day4_5.setBackground(new java.awt.Color(245, 245, 246));
-        day4_5.setForeground(new java.awt.Color(0, 0, 0));
         day4_5.setBorderColor(java.awt.Color.darkGray);
         day4_5.setBorderPainted(true);
         day4_5.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -917,7 +882,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day4_5);
 
         day5_5.setBackground(new java.awt.Color(245, 245, 246));
-        day5_5.setForeground(new java.awt.Color(0, 0, 0));
         day5_5.setBorderColor(java.awt.Color.darkGray);
         day5_5.setBorderPainted(true);
         day5_5.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -929,7 +893,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day5_5);
 
         day6_5.setBackground(new java.awt.Color(245, 245, 246));
-        day6_5.setForeground(new java.awt.Color(0, 0, 0));
         day6_5.setBorderColor(java.awt.Color.darkGray);
         day6_5.setBorderPainted(true);
         day6_5.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -941,7 +904,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day6_5);
 
         day0_6.setBackground(new java.awt.Color(245, 245, 246));
-        day0_6.setForeground(new java.awt.Color(0, 0, 0));
         day0_6.setBorderColor(java.awt.Color.darkGray);
         day0_6.setBorderPainted(true);
         day0_6.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -954,7 +916,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day0_6);
 
         day1_6.setBackground(new java.awt.Color(245, 245, 246));
-        day1_6.setForeground(new java.awt.Color(0, 0, 0));
         day1_6.setBorderColor(java.awt.Color.darkGray);
         day1_6.setBorderPainted(true);
         day1_6.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -966,7 +927,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day1_6);
 
         day2_6.setBackground(new java.awt.Color(245, 245, 246));
-        day2_6.setForeground(new java.awt.Color(0, 0, 0));
         day2_6.setBorderColor(java.awt.Color.darkGray);
         day2_6.setBorderPainted(true);
         day2_6.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -978,7 +938,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day2_6);
 
         day3_6.setBackground(new java.awt.Color(245, 245, 246));
-        day3_6.setForeground(new java.awt.Color(0, 0, 0));
         day3_6.setBorderColor(java.awt.Color.darkGray);
         day3_6.setBorderPainted(true);
         day3_6.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -990,7 +949,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day3_6);
 
         day4_6.setBackground(new java.awt.Color(245, 245, 246));
-        day4_6.setForeground(new java.awt.Color(0, 0, 0));
         day4_6.setBorderColor(java.awt.Color.darkGray);
         day4_6.setBorderPainted(true);
         day4_6.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1002,7 +960,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day4_6);
 
         day5_6.setBackground(new java.awt.Color(245, 245, 246));
-        day5_6.setForeground(new java.awt.Color(0, 0, 0));
         day5_6.setBorderColor(java.awt.Color.darkGray);
         day5_6.setBorderPainted(true);
         day5_6.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1014,7 +971,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day5_6);
 
         day6_6.setBackground(new java.awt.Color(245, 245, 246));
-        day6_6.setForeground(new java.awt.Color(0, 0, 0));
         day6_6.setBorderColor(java.awt.Color.darkGray);
         day6_6.setBorderPainted(true);
         day6_6.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1026,7 +982,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day6_6);
 
         day0_7.setBackground(new java.awt.Color(245, 245, 246));
-        day0_7.setForeground(new java.awt.Color(0, 0, 0));
         day0_7.setBorderColor(java.awt.Color.darkGray);
         day0_7.setBorderPainted(true);
         day0_7.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1038,7 +993,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day0_7);
 
         day1_7.setBackground(new java.awt.Color(245, 245, 246));
-        day1_7.setForeground(new java.awt.Color(0, 0, 0));
         day1_7.setBorderColor(java.awt.Color.darkGray);
         day1_7.setBorderPainted(true);
         day1_7.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1050,7 +1004,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day1_7);
 
         day2_7.setBackground(new java.awt.Color(245, 245, 246));
-        day2_7.setForeground(new java.awt.Color(0, 0, 0));
         day2_7.setBorderColor(java.awt.Color.darkGray);
         day2_7.setBorderPainted(true);
         day2_7.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1062,7 +1015,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day2_7);
 
         day3_7.setBackground(new java.awt.Color(245, 245, 246));
-        day3_7.setForeground(new java.awt.Color(0, 0, 0));
         day3_7.setBorderColor(java.awt.Color.darkGray);
         day3_7.setBorderPainted(true);
         day3_7.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1074,7 +1026,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day3_7);
 
         day4_7.setBackground(new java.awt.Color(245, 245, 246));
-        day4_7.setForeground(new java.awt.Color(0, 0, 0));
         day4_7.setBorderColor(java.awt.Color.darkGray);
         day4_7.setBorderPainted(true);
         day4_7.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1086,7 +1037,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day4_7);
 
         day5_7.setBackground(new java.awt.Color(245, 245, 246));
-        day5_7.setForeground(new java.awt.Color(0, 0, 0));
         day5_7.setBorderColor(java.awt.Color.darkGray);
         day5_7.setBorderPainted(true);
         day5_7.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1098,7 +1048,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day5_7);
 
         day6_7.setBackground(new java.awt.Color(245, 245, 246));
-        day6_7.setForeground(new java.awt.Color(0, 0, 0));
         day6_7.setBorderColor(java.awt.Color.darkGray);
         day6_7.setBorderPainted(true);
         day6_7.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1110,7 +1059,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day6_7);
 
         day0_8.setBackground(new java.awt.Color(245, 245, 246));
-        day0_8.setForeground(new java.awt.Color(0, 0, 0));
         day0_8.setBorderColor(java.awt.Color.darkGray);
         day0_8.setBorderPainted(true);
         day0_8.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1122,7 +1070,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day0_8);
 
         day1_8.setBackground(new java.awt.Color(245, 245, 246));
-        day1_8.setForeground(new java.awt.Color(0, 0, 0));
         day1_8.setBorderColor(java.awt.Color.darkGray);
         day1_8.setBorderPainted(true);
         day1_8.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1134,7 +1081,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day1_8);
 
         day2_8.setBackground(new java.awt.Color(245, 245, 246));
-        day2_8.setForeground(new java.awt.Color(0, 0, 0));
         day2_8.setBorderColor(java.awt.Color.darkGray);
         day2_8.setBorderPainted(true);
         day2_8.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1146,7 +1092,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day2_8);
 
         day3_8.setBackground(new java.awt.Color(245, 245, 246));
-        day3_8.setForeground(new java.awt.Color(0, 0, 0));
         day3_8.setBorderColor(java.awt.Color.darkGray);
         day3_8.setBorderPainted(true);
         day3_8.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1158,7 +1103,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day3_8);
 
         day4_8.setBackground(new java.awt.Color(245, 245, 246));
-        day4_8.setForeground(new java.awt.Color(0, 0, 0));
         day4_8.setBorderColor(java.awt.Color.darkGray);
         day4_8.setBorderPainted(true);
         day4_8.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1170,7 +1114,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day4_8);
 
         day5_8.setBackground(new java.awt.Color(245, 245, 246));
-        day5_8.setForeground(new java.awt.Color(0, 0, 0));
         day5_8.setBorderColor(java.awt.Color.darkGray);
         day5_8.setBorderPainted(true);
         day5_8.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1182,7 +1125,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day5_8);
 
         day6_8.setBackground(new java.awt.Color(245, 245, 246));
-        day6_8.setForeground(new java.awt.Color(0, 0, 0));
         day6_8.setBorderColor(java.awt.Color.darkGray);
         day6_8.setBorderPainted(true);
         day6_8.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1194,7 +1136,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day6_8);
 
         day0_9.setBackground(new java.awt.Color(245, 245, 246));
-        day0_9.setForeground(new java.awt.Color(0, 0, 0));
         day0_9.setBorderColor(java.awt.Color.darkGray);
         day0_9.setBorderPainted(true);
         day0_9.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1206,7 +1147,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day0_9);
 
         day1_9.setBackground(new java.awt.Color(245, 245, 246));
-        day1_9.setForeground(new java.awt.Color(0, 0, 0));
         day1_9.setBorderColor(java.awt.Color.darkGray);
         day1_9.setBorderPainted(true);
         day1_9.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1218,7 +1158,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day1_9);
 
         day2_9.setBackground(new java.awt.Color(245, 245, 246));
-        day2_9.setForeground(new java.awt.Color(0, 0, 0));
         day2_9.setBorderColor(java.awt.Color.darkGray);
         day2_9.setBorderPainted(true);
         day2_9.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1230,7 +1169,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day2_9);
 
         day3_9.setBackground(new java.awt.Color(245, 245, 246));
-        day3_9.setForeground(new java.awt.Color(0, 0, 0));
         day3_9.setBorderColor(java.awt.Color.darkGray);
         day3_9.setBorderPainted(true);
         day3_9.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1242,7 +1180,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day3_9);
 
         day4_9.setBackground(new java.awt.Color(245, 245, 246));
-        day4_9.setForeground(new java.awt.Color(0, 0, 0));
         day4_9.setBorderColor(java.awt.Color.darkGray);
         day4_9.setBorderPainted(true);
         day4_9.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1254,7 +1191,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day4_9);
 
         day5_9.setBackground(new java.awt.Color(245, 245, 246));
-        day5_9.setForeground(new java.awt.Color(0, 0, 0));
         day5_9.setBorderColor(java.awt.Color.darkGray);
         day5_9.setBorderPainted(true);
         day5_9.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1266,7 +1202,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day5_9);
 
         day6_9.setBackground(new java.awt.Color(245, 245, 246));
-        day6_9.setForeground(new java.awt.Color(0, 0, 0));
         day6_9.setBorderColor(java.awt.Color.darkGray);
         day6_9.setBorderPainted(true);
         day6_9.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1278,7 +1213,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day6_9);
 
         day0_10.setBackground(new java.awt.Color(245, 245, 246));
-        day0_10.setForeground(new java.awt.Color(0, 0, 0));
         day0_10.setBorderColor(java.awt.Color.darkGray);
         day0_10.setBorderPainted(true);
         day0_10.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1290,7 +1224,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day0_10);
 
         day1_10.setBackground(new java.awt.Color(245, 245, 246));
-        day1_10.setForeground(new java.awt.Color(0, 0, 0));
         day1_10.setBorderColor(java.awt.Color.darkGray);
         day1_10.setBorderPainted(true);
         day1_10.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1302,7 +1235,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day1_10);
 
         day2_10.setBackground(new java.awt.Color(245, 245, 246));
-        day2_10.setForeground(new java.awt.Color(0, 0, 0));
         day2_10.setBorderColor(java.awt.Color.darkGray);
         day2_10.setBorderPainted(true);
         day2_10.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1314,7 +1246,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day2_10);
 
         day3_10.setBackground(new java.awt.Color(245, 245, 246));
-        day3_10.setForeground(new java.awt.Color(0, 0, 0));
         day3_10.setBorderColor(java.awt.Color.darkGray);
         day3_10.setBorderPainted(true);
         day3_10.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1326,7 +1257,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day3_10);
 
         day4_10.setBackground(new java.awt.Color(245, 245, 246));
-        day4_10.setForeground(new java.awt.Color(0, 0, 0));
         day4_10.setBorderColor(java.awt.Color.darkGray);
         day4_10.setBorderPainted(true);
         day4_10.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1338,7 +1268,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day4_10);
 
         day5_10.setBackground(new java.awt.Color(245, 245, 246));
-        day5_10.setForeground(new java.awt.Color(0, 0, 0));
         day5_10.setBorderColor(java.awt.Color.darkGray);
         day5_10.setBorderPainted(true);
         day5_10.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1350,7 +1279,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day5_10);
 
         day6_10.setBackground(new java.awt.Color(245, 245, 246));
-        day6_10.setForeground(new java.awt.Color(0, 0, 0));
         day6_10.setBorderColor(java.awt.Color.darkGray);
         day6_10.setBorderPainted(true);
         day6_10.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1362,7 +1290,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day6_10);
 
         day0_11.setBackground(new java.awt.Color(245, 245, 246));
-        day0_11.setForeground(new java.awt.Color(0, 0, 0));
         day0_11.setBorderColor(java.awt.Color.darkGray);
         day0_11.setBorderPainted(true);
         day0_11.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1374,7 +1301,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day0_11);
 
         day1_11.setBackground(new java.awt.Color(245, 245, 246));
-        day1_11.setForeground(new java.awt.Color(0, 0, 0));
         day1_11.setBorderColor(java.awt.Color.darkGray);
         day1_11.setBorderPainted(true);
         day1_11.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1386,7 +1312,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day1_11);
 
         day2_11.setBackground(new java.awt.Color(245, 245, 246));
-        day2_11.setForeground(new java.awt.Color(0, 0, 0));
         day2_11.setBorderColor(java.awt.Color.darkGray);
         day2_11.setBorderPainted(true);
         day2_11.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1398,7 +1323,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day2_11);
 
         day3_11.setBackground(new java.awt.Color(245, 245, 246));
-        day3_11.setForeground(new java.awt.Color(0, 0, 0));
         day3_11.setBorderColor(java.awt.Color.darkGray);
         day3_11.setBorderPainted(true);
         day3_11.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1410,7 +1334,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day3_11);
 
         day4_11.setBackground(new java.awt.Color(245, 245, 246));
-        day4_11.setForeground(new java.awt.Color(0, 0, 0));
         day4_11.setBorderColor(java.awt.Color.darkGray);
         day4_11.setBorderPainted(true);
         day4_11.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1422,7 +1345,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day4_11);
 
         day5_11.setBackground(new java.awt.Color(245, 245, 246));
-        day5_11.setForeground(new java.awt.Color(0, 0, 0));
         day5_11.setBorderColor(java.awt.Color.darkGray);
         day5_11.setBorderPainted(true);
         day5_11.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1434,7 +1356,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day5_11);
 
         day6_11.setBackground(new java.awt.Color(245, 245, 246));
-        day6_11.setForeground(new java.awt.Color(0, 0, 0));
         day6_11.setBorderColor(java.awt.Color.darkGray);
         day6_11.setBorderPainted(true);
         day6_11.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1446,7 +1367,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day6_11);
 
         day0_12.setBackground(new java.awt.Color(245, 245, 246));
-        day0_12.setForeground(new java.awt.Color(0, 0, 0));
         day0_12.setBorderColor(java.awt.Color.darkGray);
         day0_12.setBorderPainted(true);
         day0_12.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1458,7 +1378,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day0_12);
 
         day1_12.setBackground(new java.awt.Color(245, 245, 246));
-        day1_12.setForeground(new java.awt.Color(0, 0, 0));
         day1_12.setBorderColor(java.awt.Color.darkGray);
         day1_12.setBorderPainted(true);
         day1_12.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1470,7 +1389,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day1_12);
 
         day2_12.setBackground(new java.awt.Color(245, 245, 246));
-        day2_12.setForeground(new java.awt.Color(0, 0, 0));
         day2_12.setBorderColor(java.awt.Color.darkGray);
         day2_12.setBorderPainted(true);
         day2_12.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1482,7 +1400,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day2_12);
 
         day3_12.setBackground(new java.awt.Color(245, 245, 246));
-        day3_12.setForeground(new java.awt.Color(0, 0, 0));
         day3_12.setBorderColor(java.awt.Color.darkGray);
         day3_12.setBorderPainted(true);
         day3_12.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1494,7 +1411,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day3_12);
 
         day4_12.setBackground(new java.awt.Color(245, 245, 246));
-        day4_12.setForeground(new java.awt.Color(0, 0, 0));
         day4_12.setBorderColor(java.awt.Color.darkGray);
         day4_12.setBorderPainted(true);
         day4_12.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1506,7 +1422,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day4_12);
 
         day5_12.setBackground(new java.awt.Color(245, 245, 246));
-        day5_12.setForeground(new java.awt.Color(0, 0, 0));
         day5_12.setBorderColor(java.awt.Color.darkGray);
         day5_12.setBorderPainted(true);
         day5_12.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1518,7 +1433,6 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day5_12);
 
         day6_12.setBackground(new java.awt.Color(245, 245, 246));
-        day6_12.setForeground(new java.awt.Color(0, 0, 0));
         day6_12.setBorderColor(java.awt.Color.darkGray);
         day6_12.setBorderPainted(true);
         day6_12.setFont(new java.awt.Font("Helvetica Neue", 0, 12)); // NOI18N
@@ -1530,7 +1444,7 @@ public class Reservation extends javax.swing.JPanel {
         calendar.add(day6_12);
 
         myReservationCalendar.add(calendar);
-        calendar.setBounds(30, 100, 800, 428);
+        calendar.setBounds(30, 100, 710, 420);
         calendar.setVisible(false);
 
         calendarDate.setBackground(new java.awt.Color(255, 255, 255));
@@ -1581,7 +1495,7 @@ public class Reservation extends javax.swing.JPanel {
         calendarDate.add(date6);
 
         myReservationCalendar.add(calendarDate);
-        calendarDate.setBounds(30, 80, 800, 20);
+        calendarDate.setBounds(30, 80, 710, 20);
 
         calendarTime.setBackground(new java.awt.Color(255, 255, 255));
         calendarTime.setLayout(new java.awt.GridLayout(13, 7, 0, 3));
@@ -1652,10 +1566,24 @@ public class Reservation extends javax.swing.JPanel {
         calendarTime.add(time12);
 
         myReservationCalendar.add(calendarTime);
-        calendarTime.setBounds(8, 100, 20, 428);
+        calendarTime.setBounds(8, 100, 15, 420);
+
+        monthlyViewButton.setText("월별");
+        myReservationCalendar.add(monthlyViewButton);
+        monthlyViewButton.setBounds(750, 100, 70, 40);
+        monthlyViewButton.getAccessibleContext().setAccessibleParent(day4_9);
+
+        weeklyViewButton.setText("주별");
+        myReservationCalendar.add(weeklyViewButton);
+        weeklyViewButton.setBounds(750, 150, 70, 40);
+
+        dailyViewButton.setText("일별");
+        dailyViewButton.setToolTipText("");
+        myReservationCalendar.add(dailyViewButton);
+        dailyViewButton.setBounds(750, 200, 70, 40);
 
         add(myReservationCalendar);
-        myReservationCalendar.setBounds(252, 6, 840, 535);
+        myReservationCalendar.setBounds(260, 10, 830, 530);
     }// </editor-fold>//GEN-END:initComponents
 
     private void calendarDateAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_calendarDateAncestorAdded
@@ -1676,6 +1604,17 @@ public class Reservation extends javax.swing.JPanel {
     }
     public void addReservationButtionListener(ActionListener listener) {
         updateButton.addActionListener(listener);
+    }
+    
+    // [신규] 일별/주별/월별 버튼 리스너
+    public void addDailyViewListener(ActionListener listener) {
+        dailyViewButton.addActionListener(listener);
+    }
+    public void addWeeklyViewListener(ActionListener listener) {
+        weeklyViewButton.addActionListener(listener);
+    }
+    public void addMonthlyViewListener(ActionListener listener) {
+        monthlyViewButton.addActionListener(listener);
     }
 
     // 필드 값 가져오기
@@ -1701,6 +1640,7 @@ public class Reservation extends javax.swing.JPanel {
     private javax.swing.JPanel calendar;
     private javax.swing.JPanel calendarDate;
     private javax.swing.JPanel calendarTime;
+    private javax.swing.JButton dailyViewButton;
     private javax.swing.JLabel date0;
     private javax.swing.JLabel date1;
     private javax.swing.JLabel date2;
@@ -1811,6 +1751,7 @@ public class Reservation extends javax.swing.JPanel {
     private javax.swing.JLabel lectureRoomLabel;
     private javax.swing.JPanel lectureRoomList;
     private deu.view.custom.PanelRound lectureRoomListPanel;
+    private javax.swing.JButton monthlyViewButton;
     private deu.view.custom.PanelRound myReservationCalendar;
     private deu.view.custom.TextFieldRound reservationDateField;
     private javax.swing.JLabel reservationDateLabel;
@@ -1833,5 +1774,6 @@ public class Reservation extends javax.swing.JPanel {
     private deu.view.custom.TextFieldRound titleField;
     private javax.swing.JLabel titleLabel;
     private deu.view.custom.ButtonRound updateButton;
+    private javax.swing.JButton weeklyViewButton;
     // End of variables declaration//GEN-END:variables
 }
