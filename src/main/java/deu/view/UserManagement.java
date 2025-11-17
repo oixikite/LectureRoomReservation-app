@@ -57,8 +57,11 @@ public class UserManagement extends javax.swing.JPanel {
         userTable = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setMaximumSize(new java.awt.Dimension(1100, 550));
-        setMinimumSize(new java.awt.Dimension(1100, 550));
+        setMaximumSize(new java.awt.Dimension(1100, 600));
+        setMinimumSize(new java.awt.Dimension(1100, 600));
+        setName(""); // NOI18N
+        setRequestFocusEnabled(false);
+        setVerifyInputWhenFocusTarget(false);
         setLayout(null);
 
         profilePanel.setBackground(new java.awt.Color(20, 90, 170));
@@ -147,7 +150,6 @@ public class UserManagement extends javax.swing.JPanel {
         editProfileDataPanel.add(nameLabel);
         nameLabel.setBounds(10, 110, 240, 17);
 
-        editProfileNameField.setBackground(new java.awt.Color(255, 255, 255));
         editProfileNameField.setForeground(new java.awt.Color(0, 0, 0));
         editProfileNameField.setRound(10);
         editProfileDataPanel.add(editProfileNameField);
@@ -158,7 +160,6 @@ public class UserManagement extends javax.swing.JPanel {
         editProfileDataPanel.add(majorLabel);
         majorLabel.setBounds(10, 170, 240, 17);
 
-        editProfileMajorField.setBackground(new java.awt.Color(255, 255, 255));
         editProfileMajorField.setForeground(new java.awt.Color(0, 0, 0));
         editProfileMajorField.setRound(10);
         editProfileDataPanel.add(editProfileMajorField);
@@ -169,7 +170,6 @@ public class UserManagement extends javax.swing.JPanel {
         editProfileDataPanel.add(passwordLabel);
         passwordLabel.setBounds(10, 230, 240, 17);
 
-        editProfilePasswordField.setBackground(new java.awt.Color(255, 255, 255));
         editProfilePasswordField.setForeground(new java.awt.Color(0, 0, 0));
         editProfilePasswordField.setRound(10);
         editProfileDataPanel.add(editProfilePasswordField);

@@ -634,11 +634,11 @@ public class HomeSwingController implements NotificationObserver {
     // 예악 관리 메뉴 전환 - 수정 금지
     private void showReservationManagement(ActionEvent e) {
         Home.getInstance().closeFloatingFrames();
-        ReservationManagement panel = new ReservationManagement();
-
-        new ReservationManagementSwingController(panel);
-
-        view.replaceMainContent(view.getManagerMenuPanel(), panel);
+        Reservation reservation = new Reservation(view.getUserNumber(), view.getUserPassword());
+        new ReservationSwingController(reservation);
+        
+        // 'view.getMenuPanel()'을 사용해야 상단 메뉴가 유지됩니다.
+        view.replaceMainContent(view.getMenuPanel(), reservation);
     }
     // 일반 사용자 전용 매뉴 전환 - 수정 금지
     private void showCommonMenu(ActionEvent e) {
