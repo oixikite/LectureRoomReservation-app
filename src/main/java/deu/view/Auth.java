@@ -94,7 +94,8 @@ public class Auth extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("강의실 예약 프로그램");
-        setMinimumSize(new java.awt.Dimension(1100, 600));
+        setMinimumSize(new java.awt.Dimension(1100, 630));
+        setPreferredSize(new java.awt.Dimension(1100, 630));
         setResizable(false);
         setSize(new java.awt.Dimension(1100, 630));
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -407,7 +408,7 @@ public class Auth extends javax.swing.JFrame {
         signup_signupTitle.setFont(new java.awt.Font("Helvetica", 1, 24)); // NOI18N
         signup_signupTitle.setText("Signup");
         signup.add(signup_signupTitle);
-        signup_signupTitle.setBounds(640, 160, 80, 40);
+        signup_signupTitle.setBounds(640, 160, 79, 40);
 
         signup_signupDescription.setForeground(new java.awt.Color(153, 153, 153));
         signup_signupDescription.setText("Please Sign-up before LectureRoom Reservation System");
