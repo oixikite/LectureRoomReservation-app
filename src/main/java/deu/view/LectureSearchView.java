@@ -28,7 +28,7 @@ public class LectureSearchView extends JFrame {
 
     // 서버 정보
     private static final String HOST = "127.0.0.1";
-    private static final int PORT = 8080;
+    private static final int PORT = 9999;
     
     //조회된 강의 목록 원본을 저장할 리스트
     private List<Lecture> currentLectureList = new ArrayList<>();
