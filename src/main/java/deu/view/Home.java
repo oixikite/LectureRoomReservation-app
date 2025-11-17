@@ -1994,6 +1994,14 @@ public class Home extends javax.swing.JPanel {
     public JPanel getManagerMenuPanel() {
         return managerMenu;
     }
+    
+    public String getUserNumber() {
+        return this.userNumber;
+    }
+
+    public String getUserPassword() {
+        return this.userPassword;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private deu.view.custom.ButtonRound LectureRoomReservationMenu;
