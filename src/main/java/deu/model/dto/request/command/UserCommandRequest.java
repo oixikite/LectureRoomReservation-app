@@ -20,4 +20,12 @@ public class UserCommandRequest implements Serializable {
         this.command = command;
         this.payload = payload;
     }
+    
+        public String getType() {
+        return command;
+    }
+    
+    public Object getData() {
+        return payload;
+    }
 }
