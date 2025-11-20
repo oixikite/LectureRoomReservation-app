@@ -73,16 +73,17 @@ public class RoomReservationClientController {
         return null;
     }
 
-    // 개인별 예약 삭제
-    public BasicResponse deleteRoomReservation(String number, String roomReservationId) {
+    // [수정] 개인별 예약 삭제 (사유 포함된 DTO 전송)
+    public BasicResponse deleteRoomReservation(DeleteRoomReservationRequest request) {        
         try (
                 Socket socket = new Socket(host, port);
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream())
         ) {
-            DeleteRoomReservationRequest deleteRoomReservationRequest = new DeleteRoomReservationRequest(number, roomReservationId);
-            ReservationCommandRequest req = new ReservationCommandRequest("예약 삭제", deleteRoomReservationRequest);
+            // DeleteRoomReservationRequest 객체를 그대로 서버로 전달 (사유 포함)
+            ReservationCommandRequest req = new ReservationCommandRequest("예약 삭제", request);
             out.writeObject(req);
+            out.flush();
 
             Object res = in.readObject();
             if (res instanceof BasicResponse r) {

@@ -4,6 +4,7 @@ import deu.controller.business.LectureClientController;
 import deu.controller.business.RoomReservationManagementClientController;
 import deu.controller.business.RoomReservationClientController;
 import deu.model.dto.request.data.reservation.AccompanyingStudent; // [추가]
+import deu.model.dto.request.data.reservation.DeleteRoomReservationRequest;
 import deu.model.dto.request.data.reservation.RoomReservationRequest;
 import deu.model.dto.response.BasicResponse;
 import deu.model.entity.Lecture;
@@ -401,7 +402,7 @@ public class ReservationManagementSwingController {
         worker.execute();
     }
 
-    // 삭제하기 버튼 기능
+    // 삭제하기 버튼 기능 [수정: 사유 입력 추가]
     private void deleteButton(ActionEvent e) {
         boolean check = validateReservationInput();
         if (!check) {
@@ -427,13 +428,23 @@ public class ReservationManagementSwingController {
             return;
         }
 
+        // [추가] 취소 사유 입력 받기
+        String reason = JOptionPane.showInputDialog(null, "취소 사유를 입력하세요:", "예약 취소", JOptionPane.QUESTION_MESSAGE);
+        if (reason == null || reason.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "취소 사유를 입력해야 삭제할 수 있습니다.", "입력 오류", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         view.getDeleteButton().setEnabled(false);
 
         SwingWorker<BasicResponse, Void> worker = new SwingWorker<>() {
             @Override
             protected BasicResponse doInBackground() {
                 try {
-                    return roomReservationManagementClientController.deleteRoomReservation(uniqueNumber);
+                    String userNumber = Home.getInstance().getUserNumber(); // 현재 사용자 ID
+                    // [수정] DTO에 사유를 담아서 전달
+                    DeleteRoomReservationRequest request = new DeleteRoomReservationRequest(userNumber, uniqueNumber, reason);
+                    return roomReservationManagementClientController.deleteRoomReservation(request);                
                 } catch (Exception ex) {
                     return new BasicResponse("500", "예외 발생: " + ex.getMessage());
                 }
@@ -553,6 +564,7 @@ public class ReservationManagementSwingController {
         return result;
     }
 
+    // [수정] 예약 목록에서 선택 처리 (거절 시 사유 입력)    
     private void processReservationChoice(RoundReservationInformationButton btn) {
         int choice = JOptionPane.showOptionDialog(
                 view,
@@ -576,13 +588,20 @@ public class ReservationManagementSwingController {
                 JOptionPane.showMessageDialog(view, "처리에 실패했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
             }
         } else if (choice == JOptionPane.NO_OPTION) {
-            BasicResponse response = roomReservationManagementClientController.deleteRoomReservation(btn.getRoomReservation().getId());
-            String code = response.code;
-            if (code.equals("200")) {
-                JOptionPane.showMessageDialog(view, "예약이 거절되어 삭제되었습니다.");
-            } else {
-                JOptionPane.showMessageDialog(view, "처리에 실패했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+            // [변경] 삭제(거절) 시 사유 입력
+            String reason = JOptionPane.showInputDialog(view, "삭제(거절) 사유를 입력하세요:", "예약 삭제", JOptionPane.QUESTION_MESSAGE);
+            if (reason == null || reason.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(view, "사유를 입력해야 삭제할 수 있습니다.");
+                return;
             }
+
+            String targetUserNumber = btn.getRoomReservation().getNumber();
+            DeleteRoomReservationRequest request = new DeleteRoomReservationRequest(targetUserNumber, btn.getRoomReservation().getId(), reason);
+            BasicResponse response = roomReservationManagementClientController.deleteRoomReservation(request);
+            
+            String code = response.code;
+            if (code.equals("200")) JOptionPane.showMessageDialog(view, "예약이 거절되어 삭제되었습니다.");
+            else JOptionPane.showMessageDialog(view, "처리에 실패했습니다.\n" + response.data, "오류", JOptionPane.ERROR_MESSAGE);
         }
         reservationListPanelRefresh();
         updateCalendarWithDummyData();

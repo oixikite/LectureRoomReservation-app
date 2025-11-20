@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import deu.controller.observer.NotificationObserver;
 import deu.service.NotificationPollingService;
 import deu.controller.business.NotificationClientController; // 알림함 전체 조회용
+import deu.model.dto.request.data.reservation.DeleteRoomReservationRequest;
 import deu.model.dto.response.NotificationDTO;
 import java.util.List;
 
@@ -333,6 +334,13 @@ public class HomeSwingController implements NotificationObserver {
         if (confirm != JOptionPane.YES_OPTION) {
             return;
         }
+        
+        // [추가] 취소 사유 입력받기
+        String reason = JOptionPane.showInputDialog(null, "취소 사유를 입력하세요:", "예약 취소", JOptionPane.QUESTION_MESSAGE);
+        if (reason == null || reason.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "취소 사유를 입력해야 삭제할 수 있습니다.", "입력 오류", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         // 버튼 잠금 또는 UI 비활성화 처리 필요 시 여기서 추가 가능
 
@@ -340,7 +348,9 @@ public class HomeSwingController implements NotificationObserver {
             @Override
             protected BasicResponse doInBackground() {
                 try {
-                    return roomReservationClientController.deleteRoomReservation(userNumber, uniqueNumber);
+                    // [변경] DTO 생성 및 전송
+                    DeleteRoomReservationRequest request = new DeleteRoomReservationRequest(userNumber, uniqueNumber, reason);
+                    return roomReservationClientController.deleteRoomReservation(request);                
                 } catch (Exception ex) {
                     return new BasicResponse("500", "예외 발생: " + ex.getMessage());
                 }

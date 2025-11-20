@@ -81,4 +81,6 @@ public class RoomReservation implements Serializable {
     private String purpose;
     private int accompanyingStudentCount;
     private List<AccompanyingStudent> accompanyingStudents;
+    // [추가] 취소 사유 필드
+    private String cancellationReason;
 }

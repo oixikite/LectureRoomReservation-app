@@ -3,6 +3,7 @@ package deu.controller.business;
 import deu.config.Config;
 import deu.config.ConfigLoader;
 import deu.model.dto.request.command.ReservationManagementCommandRequest;
+import deu.model.dto.request.data.reservation.DeleteRoomReservationRequest;
 import deu.model.dto.request.data.reservation.RoomReservationRequest;
 import deu.model.dto.response.BasicResponse;
 import deu.model.entity.RoomReservation;
@@ -46,14 +47,15 @@ public class RoomReservationManagementClientController {
         return null;
     }
 
-    // 관리자 예약 삭제
-    public BasicResponse deleteRoomReservation(String roomReservationId) {
+    // [수정] 관리자 예약 삭제 (String -> DeleteRoomReservationRequest)
+    public BasicResponse deleteRoomReservation(DeleteRoomReservationRequest request) {       
         try (
                 Socket socket = new Socket(host, port);
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream())
         ) {
-            ReservationManagementCommandRequest req = new ReservationManagementCommandRequest("예약 삭제", roomReservationId);
+            // DTO 객체를 담아서 전송
+            ReservationManagementCommandRequest req = new ReservationManagementCommandRequest("예약 삭제", request);
             out.writeObject(req);
 
             Object res = in.readObject();
