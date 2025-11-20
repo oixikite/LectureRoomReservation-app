@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class RoomReservationRequest implements Serializable {
-
+    
     private String id;
     private String buildingName;
     private String floor;
@@ -49,5 +49,9 @@ public class RoomReservationRequest implements Serializable {
         this.purpose = purpose;
         this.accompanyingStudentCount = accompanyingStudentCount;
         this.accompanyingStudents = accompanyingStudents;
+    }
+    
+    public void setId(String id) {
+        this.id = id;
     }
 }
