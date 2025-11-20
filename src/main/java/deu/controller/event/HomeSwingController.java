@@ -457,9 +457,28 @@ public class HomeSwingController implements NotificationObserver {
 
                     myReservationList.revalidate();
                     myReservationList.repaint();
+                    
+                 long activeCount = 0;
+                    
+                    System.out.println("[DEBUG] 예약 카운트 계산 시작");
+                    
+                    for (RoomReservation r : reservations) {
+                        String s = r.getStatus();
+                        if (s == null) s = "";
+                        s = s.trim(); // 공백 제거
 
-                    view.getReservationCount().setText(String.valueOf(reservations.size()));
-                    view.getReservationTotalCount().setText(String.valueOf(Math.max(0, 5 - reservations.size())));
+                        System.out.println(" - 예약 ID: " + r.getId() + " / 상태: [" + s + "]");
+                
+                        if ("대기".equals(s) || "승인".equals(s)) {
+                            activeCount++;
+                        }
+                    }
+                    
+                    System.out.println("[DEBUG] 최종 유효 예약 수: " + activeCount);
+
+                    // 계산된 숫자를 화면에 반영
+                    view.getReservationCount().setText(String.valueOf(activeCount));
+                    view.getReservationTotalCount().setText(String.valueOf(Math.max(0, 5 - activeCount)));
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "예약 목록 로딩 중 오류가 발생했습니다.\n" + e.getMessage(),
                             "예약 목록 오류", JOptionPane.ERROR_MESSAGE);
