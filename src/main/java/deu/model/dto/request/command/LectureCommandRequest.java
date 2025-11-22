@@ -1,23 +1,29 @@
 package deu.model.dto.request.command;
 
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * [LectureCommandRequest 클래스]
- * <p>
- * 이 클래스는 강의 관련 요청을 서버에 전달하기 위한 커맨드 기반 DTO입니다.
- * 커맨드(command) 필드에는 요청의 유형(예: "create", "delete", "update" 등)이 들어가고,
- * payload에는 해당 요청에 필요한 데이터를 객체 형태로 담습니다.
- * </p>
- *
- * <p>직렬화를 위해 Serializable을 구현하고 있습니다.</p>
+ * 강의 관련 요청 커맨드 객체
+ * - command: 요청 유형 (예: "주간 강의 조회")
+ * - payload: 전송 데이터 (예: LectureRequest, Lecture 등)
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class LectureCommandRequest implements Serializable {
-    public String command;
-    public Object payload;
+    private static final long serialVersionUID = 1L;
 
-    public LectureCommandRequest(String command, Object payload) {
-        this.command = command;
-        this.payload = payload;
-    }
+    private String command;
+    private Object payload; // [통일] 필드명을 data -> payload로 변경
+
+    // 수동 Getter/Setter (Lombok 미동작 대비)
+    public String getCommand() { return command; }
+    public void setCommand(String command) { this.command = command; }
+    public Object getPayload() { return payload; }
+    public void setPayload(Object payload) { this.payload = payload; }
 }

@@ -5,25 +5,23 @@
 package deu.view;
 
 import deu.view.custom.ButtonRound;
+import deu.controller.event.CalendarViewContainer; // 인터페이스 import
 import lombok.Getter;
 import lombok.Setter;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-/**
- *
- * @author oxxultus
- */
 @Getter
 @Setter
-public class Reservation extends javax.swing.JPanel {
+// [수정] CalendarViewContainer 구현 추가
+public class Reservation extends javax.swing.JPanel implements CalendarViewContainer {
 
     // 사용자 정보 저장
     private String userNumber;
@@ -33,7 +31,7 @@ public class Reservation extends javax.swing.JPanel {
     private JButton selectedCalendarButton = null;
     private JButton selectedRoomButton = null;
     private JButton selectedFloorButton = null;
-    
+
     // 선택된 색상 저장
     public static final Color FLOOR_DEFAULT_COLOR = new Color(255, 255, 255);
     public static final Color FLOOR_SELECTED_COLOR = new Color(20, 90, 170);
@@ -51,7 +49,21 @@ public class Reservation extends javax.swing.JPanel {
         this.userPassword = userPassword;
         initComponents();
     }
-    
+
+    // -----------------------------------------------------------
+    // [Interface 구현]
+    // -----------------------------------------------------------
+    @Override
+    public JPanel getCalendarPanel() {
+        return this.calendar; // 기존 주간 그리드 패널 반환
+    }
+
+    @Override
+    public void setDateHeader(String text) {
+        // 주간 뷰는 헤더 라벨을 별도로 관리하므로 비워둠
+    }
+    // -----------------------------------------------------------
+
     public ButtonRound createStyledButton(String text, int width, int height) {
         ButtonRound btn = new ButtonRound();
         btn.setText(text);
@@ -232,7 +244,6 @@ public class Reservation extends javax.swing.JPanel {
         time11 = new javax.swing.JLabel();
         time12 = new javax.swing.JLabel();
         monthlyViewButton = new javax.swing.JButton();
-        weeklyViewButton = new javax.swing.JButton();
         dailyViewButton = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -1573,14 +1584,10 @@ public class Reservation extends javax.swing.JPanel {
         monthlyViewButton.setBounds(750, 100, 70, 40);
         monthlyViewButton.getAccessibleContext().setAccessibleParent(day4_9);
 
-        weeklyViewButton.setText("주별");
-        myReservationCalendar.add(weeklyViewButton);
-        weeklyViewButton.setBounds(750, 150, 70, 40);
-
         dailyViewButton.setText("일별");
         dailyViewButton.setToolTipText("");
         myReservationCalendar.add(dailyViewButton);
-        dailyViewButton.setBounds(750, 200, 70, 40);
+        dailyViewButton.setBounds(750, 150, 70, 40);
 
         add(myReservationCalendar);
         myReservationCalendar.setBounds(260, 10, 830, 530);
@@ -1590,7 +1597,7 @@ public class Reservation extends javax.swing.JPanel {
         java.time.LocalDate today = java.time.LocalDate.now();
         java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("E/yyyy-MM-dd");
 
-        JLabel[] dateLabels = { date0, date1, date2, date3, date4, date5, date6 };
+        JLabel[] dateLabels = {date0, date1, date2, date3, date4, date5, date6};
 
         for (int i = 0; i < dateLabels.length; i++) {
             java.time.LocalDate date = today.plusDays(i);
@@ -1598,23 +1605,30 @@ public class Reservation extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_calendarDateAncestorAdded
 
-    // 컨트롤러 이벤트 연결
+    // 리스너 등록 메소드들 (기존 것 유지 + 신규 추가)
     public void addBuildingSelectionListener(ItemListener listener) {
-        buildingComboBox.addItemListener(listener);
+        if (buildingComboBox != null) {
+            buildingComboBox.addItemListener(listener);
+        }
     }
+
     public void addReservationButtionListener(ActionListener listener) {
-        updateButton.addActionListener(listener);
+        if (updateButton != null) {
+            updateButton.addActionListener(listener);
+        }
     }
-    
-    // [신규] 일별/주별/월별 버튼 리스너
+
+    // [신규] 뷰 전환 버튼 리스너
     public void addDailyViewListener(ActionListener listener) {
-        dailyViewButton.addActionListener(listener);
+        if (dailyViewButton != null) {
+            dailyViewButton.addActionListener(listener);
+        }
     }
-    public void addWeeklyViewListener(ActionListener listener) {
-        weeklyViewButton.addActionListener(listener);
-    }
+
     public void addMonthlyViewListener(ActionListener listener) {
-        monthlyViewButton.addActionListener(listener);
+        if (monthlyViewButton != null) {
+            monthlyViewButton.addActionListener(listener);
+        }
     }
 
     // 필드 값 가져오기
@@ -1774,6 +1788,5 @@ public class Reservation extends javax.swing.JPanel {
     private deu.view.custom.TextFieldRound titleField;
     private javax.swing.JLabel titleLabel;
     private deu.view.custom.ButtonRound updateButton;
-    private javax.swing.JButton weeklyViewButton;
     // End of variables declaration//GEN-END:variables
 }

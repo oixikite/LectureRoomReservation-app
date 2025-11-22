@@ -3,20 +3,23 @@ package deu.controller.event;
 import deu.controller.business.BuildingClientController;
 import deu.controller.business.LectureClientController;
 import deu.controller.business.RoomReservationClientController;
-import deu.model.dto.request.data.reservation.AccompanyingStudent; // [추가]
+import deu.model.dto.request.data.reservation.AccompanyingStudent;
 import deu.model.dto.request.data.reservation.RoomReservationRequest;
 import deu.model.dto.response.BasicResponse;
-import deu.model.enums.DayOfWeek;
+import deu.model.enums.DayOfWeek; 
+import deu.view.DailyReservationDialog;
+import deu.view.MonthlyReservationDialog;
 import deu.view.Reservation;
 import deu.view.custom.ButtonRound;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList; // [추가]
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,8 +41,10 @@ public class ReservationSwingController {
         view.addBuildingSelectionListener(this::handleBuildingSelection);
         view.addReservationButtionListener(this::handleReservation);
 
+        // [수정] 주별(Weekly) 리스너 등록 코드 제거
         view.addDailyViewListener(e -> runCalendarUpdate("DAILY"));
-        view.addWeeklyViewListener(e -> runCalendarUpdate("WEEKLY"));
+        // view.addWeeklyViewListener(e -> runCalendarUpdate("WEEKLY")); <-- 삭제
+        view.addMonthlyViewListener(e -> runCalendarUpdate("MONTHLY"));
     }
 
     private void handleBuildingSelection(ItemEvent e) {
@@ -62,6 +67,7 @@ public class ReservationSwingController {
     }
 
     private void addFloorButtons(String buildingName) {
+        view.getFloorButtonPanel().removeAll();
         for (int i = 1; i <= 9; i++) {
             ButtonRound floorBtn = view.createStyledButton(String.valueOf(i), 45, 45);
             floorBtn.setBackground(view.FLOOR_DEFAULT_COLOR);
@@ -100,61 +106,94 @@ public class ReservationSwingController {
 
         for (String room : getDynamicRoomNames(buildingName, floor)) {
             ButtonRound roomBtn = view.createStyledButton(room, 100, 30);
-            roomBtn.setBackground(view.FLOOR_DEFAULT_COLOR);
+            roomBtn.setBackground(Reservation.FLOOR_DEFAULT_COLOR);
             roomBtn.setForeground(Color.BLACK);
-
+            
             roomBtn.addActionListener(roomEv -> {
                 if (view.getSelectedRoomButton() != null) {
-                    view.getSelectedRoomButton().setBackground(view.FLOOR_DEFAULT_COLOR);
+                    view.getSelectedRoomButton().setBackground(Reservation.FLOOR_DEFAULT_COLOR);
                     view.getSelectedRoomButton().setForeground(Color.BLACK);
                 }
-                roomBtn.setBackground(view.ROOM_SELECTED_COLOR);
+                roomBtn.setBackground(Reservation.ROOM_SELECTED_COLOR);
                 roomBtn.setForeground(Color.WHITE);
                 refreshReservationWriteDataField();
                 view.setSelectedRoomButton(roomBtn);
                 view.getLectureRoomField().setText(room);
                 view.getUpdateButton().setEnabled(true);
-
-                runCalendarUpdate(this.currentViewType);
+                
+                // [핵심 수정] 다른 강의실 버튼 클릭 시 무조건 '주별(WEEKLY)' 뷰로 초기화
+                this.currentViewType = "WEEKLY";
+                runCalendarUpdate("WEEKLY");
             });
             view.getLectureRoomList().add(roomBtn);
         }
     }
 
+    /**
+     * [핵심] 뷰 업데이트 로직
+     */
     private void runCalendarUpdate(String viewType) {
         this.currentViewType = viewType;
-
+        
         String building = view.getBuildingField().getText();
         String floor = view.getFloorField().getText();
         String room = view.getLectureRoomField().getText();
 
-        if (building == null || building.isEmpty()
-                || floor == null || floor.isEmpty()
-                || room == null || room.isEmpty()) {
+        if (building == null || building.isEmpty() || floor == null || floor.isEmpty() || room == null || room.isEmpty()) {
+            if (!"WEEKLY".equals(viewType)) {
+                JOptionPane.showMessageDialog(view, "강의실을 먼저 선택해주세요.");
+            }
             return;
         }
 
-        AbstractCalendarViewTemplate worker;
+        AbstractCalendarViewTemplate worker = null;
+        JDialog popupDialog = null;
+        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(view);
+
+        // [핵심] 일별 조회 시 사용자가 선택한 날짜(텍스트필드) 가져오기
+        LocalDate targetDate = LocalDate.now();
+        if ("DAILY".equals(viewType)) {
+            try {
+                String dateText = view.getReservationDateField().getText();
+                if (dateText != null && !dateText.trim().isEmpty()) {
+                    targetDate = LocalDate.parse(dateText.trim());
+                } else {
+                    // 선택된 날짜가 없으면 안내 메시지
+                    JOptionPane.showMessageDialog(view, "날짜를 선택하지 않아 오늘 기준으로 조회합니다.");
+                }
+            } catch (DateTimeParseException e) {
+                // 파싱 실패 시 무시하고 오늘 날짜 사용
+            }
+        }
 
         switch (viewType) {
             case "WEEKLY":
                 worker = new WeeklyCalendarView(view, building, floor, room);
                 break;
             case "DAILY":
-                worker = new DailyCalendarView(view, building, floor, room);
+                // 선택된 날짜로 다이얼로그 생성
+                DailyReservationDialog dailyDialog = new DailyReservationDialog(parentFrame, "일별 강의 현황 [" + targetDate + "]");
+                popupDialog = dailyDialog;
+                worker = new DailyCalendarView(dailyDialog, building, floor, room, targetDate);
                 break;
-            default:
-                return;
+            case "MONTHLY":
+                MonthlyReservationDialog monthlyDialog = new MonthlyReservationDialog(parentFrame);
+                popupDialog = monthlyDialog;
+                worker = new MonthlyCalendarView(monthlyDialog, building, floor, room, LocalDate.now());
+                break;
         }
 
-        worker.execute();
+        if (worker != null) worker.execute();
+        if (popupDialog != null) {
+            popupDialog.setLocationRelativeTo(view);
+            popupDialog.setVisible(true);
+        }
     }
 
     // =================================================================================================================
     // 예약하는 버튼 기능
     private void handleReservation(ActionEvent e) {
         if (!validateReservationInput()) {
-            runCalendarUpdate(this.currentViewType);
             return;
         }
         String building = view.getBuildingField().getText();
@@ -167,11 +206,14 @@ public class ReservationSwingController {
         String userNumber = view.getUserNumber();
 
         LocalDate date = LocalDate.parse(reservationDate);
-        DayOfWeek dayOfWeek = DayOfWeek.fromString(date.getDayOfWeek().name());
+
+        // [수정] DayOfWeek 변환 방식 수정 (안전하게 valueOf 사용)
+        String dayName = date.getDayOfWeek().name();
+        // DayOfWeek dayOfWeek = DayOfWeek.fromString(date.getDayOfWeek().name());
         String[] timeParts = reservationTime.split("~");
         String startTime = timeParts[0].trim();
         String endTime = timeParts[1].trim();
-        String dayOfWeekStr = (dayOfWeek != null ? dayOfWeek.name() : "요일 매핑 실패");
+        // String dayOfWeekStr = (dayOfWeek != null ? dayOfWeek.name() : "요일 매핑 실패");
 
         int confirm = JOptionPane.showConfirmDialog(null, "다음 예약을 진행하시겠습니까?\n" + reservationDate + " " + startTime + " ~ " + endTime, "예약 확인", JOptionPane.YES_NO_OPTION);
         if (confirm != JOptionPane.YES_OPTION) {
@@ -215,7 +257,7 @@ public class ReservationSwingController {
         // [수정] RoomReservationRequest 생성자 호출 시 추가된 정보 전달
         RoomReservationRequest reservationRequest = new RoomReservationRequest(
                 building, floor, lectureRoom, title, description,
-                reservationDate, dayOfWeekStr, startTime, endTime, userNumber,
+                reservationDate, dayName, startTime, endTime, userNumber,
                 purpose, accompanyingStudentCount, accompanyingStudents // 추가된 인자들
         );
 
@@ -240,8 +282,9 @@ public class ReservationSwingController {
                             JOptionPane.showMessageDialog(null, response.data, "서버 오류 또는 예외", JOptionPane.ERROR_MESSAGE);
                     }
                     refreshReservationWriteDataFieldForCalendar();
-                    runCalendarUpdate(currentViewType); // 캘린더 갱신
-                } catch (Exception ex) {
+                    // [수정] 예약 후에는 무조건 메인 화면(주간 뷰)을 갱신해야 합니다.
+                    currentViewType = "WEEKLY";
+                    runCalendarUpdate("WEEKLY");                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "예약 요청 처리 중 예외 발생: " + ex.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -276,21 +319,6 @@ public class ReservationSwingController {
             return Arrays.asList("911", "912", "913", "914", "915", "916", "918");
         }
         return List.of();
-    }
-
-    private String[] parseDateTimeFromButtonName(String name) {
-        if (name != null && name.matches("day\\d+_\\d+")) {
-            String[] parts = name.substring(3).split("_");
-            int dayOffset = Integer.parseInt(parts[0]);
-            int periodIndex = Integer.parseInt(parts[1]);
-            LocalDate targetDate = LocalDate.now().plusDays(dayOffset);
-            String dateStr = targetDate.toString();
-            LocalTime startTime = LocalTime.of(9 + periodIndex, 0);
-            LocalTime endTime = startTime.plusHours(1);
-            String timeStr = startTime + "~" + endTime.toString();
-            return new String[]{dateStr, timeStr};
-        }
-        return null;
     }
 
     private boolean validateReservationInput() {

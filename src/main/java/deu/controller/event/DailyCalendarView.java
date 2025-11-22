@@ -4,10 +4,14 @@
  */
 package deu.controller.event;
 
+import deu.controller.business.LectureClientController;
 import deu.model.dto.response.BasicResponse;
 import deu.model.entity.Lecture;
-import deu.model.entity.RoomReservation;
-import deu.view.Reservation;
+import deu.view.custom.TimeSlotButton;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.time.LocalDate;
 
 /**
  *
@@ -16,60 +20,58 @@ import deu.view.Reservation;
 
 /**
  * [구상 클래스] '일별' 캘린더 뷰를 구현합니다.
- * '주별' 데이터를 가져온 뒤, 오늘(첫 번째 날)의 데이터만 추출하여 템플릿에 반환합니다.
  */
-
-
 public class DailyCalendarView extends AbstractCalendarViewTemplate {
+    
+    private LocalDate targetDate;
 
-    public DailyCalendarView(Reservation view, String building, String floor, String room) {
-        // 부모 템플릿에 view와 위치 정보 전달
+    public DailyCalendarView(CalendarViewContainer view, String building, String floor, String room, LocalDate date) {
         super(view, building, floor, room);
+        this.targetDate = date;
     }
 
-    /**
-     * [Abstract 구현] '일별' 강의 데이터를 조회합니다.
-     */
     @Override
     protected Object fetchLectureData() {
-        // 1. 서버에서는 '주별' 데이터를 그대로 가져옵니다.
-        BasicResponse res = lectureClient.returnLectureOfWeek(building, floor, room);
+        BasicResponse res = LectureClientController.getInstance()
+                .returnLectureOfDay(building, floor, room, targetDate);
         
-        // 2. '일별' 표시에 사용할 7x13 빈 배열을 새로 생성합니다.
-        Lecture[][] dailyData = new Lecture[7][13]; 
-        
-        if (res != null && "200".equals(res.code) && res.data instanceof Lecture[][]) {
-            Lecture[][] weeklyData = (Lecture[][]) res.data;
-            
-            // 3. '주별' 데이터의 0번째(오늘) 데이터만 '일별' 배열의 0번째로 복사합니다.
-            if (weeklyData[0] != null) {
-                dailyData[0] = weeklyData[0]; 
-            }
+        if (res != null && "200".equals(res.code) && res.data instanceof Lecture[]) {
+            return res.data;
         }
-        // 4. 오늘 하루치 데이터만 담긴 배열을 반환합니다.
-        return dailyData;
+        return new Lecture[13];
     }
 
-    /**
-     * [Abstract 구현] '일별' 예약 데이터를 조회합니다.
-     */
     @Override
-    protected Object fetchReservationData() {
-        // 1. 서버에서는 '주별' 데이터를 그대로 가져옵니다.
-        BasicResponse res = reservationClient.weekRoomReservationByLectureroom(building, floor, room);
-        
-        // 2. '일별' 표시에 사용할 7x13 빈 배열을 새로 생성합니다.
-        RoomReservation[][] dailyData = new RoomReservation[7][13];
-        
-        if (res != null && "200".equals(res.code) && res.data instanceof RoomReservation[][]) {
-            RoomReservation[][] weeklyData = (RoomReservation[][]) res.data;
-            
-            // 3. '주별' 데이터의 0번째(오늘) 데이터만 '일별' 배열의 0번째로 복사합니다.
-            if (weeklyData[0] != null) {
-                dailyData[0] = weeklyData[0];
+    protected Object fetchReservationData() { return null; }
+
+    @Override
+    protected void applyScheduleToCalendar(Object lectureData, Object reservationData, Object labelData) {
+        Lecture[] lectures = (Lecture[]) lectureData; 
+        Component[] components = view.getCalendarPanel().getComponents();
+
+        view.setDateHeader(targetDate.toString()); 
+
+        for (int i = 0; i < components.length; i++) {
+            if (components[i] instanceof TimeSlotButton btn) {
+                // 배경색 표시를 위한 설정
+                btn.setOpaque(true);
+                btn.setContentAreaFilled(true);
+                btn.setBackground(Color.WHITE);
+                btn.setForeground(Color.BLACK);
+                btn.setEnabled(true); 
+                
+                // [요청] 빈 칸 시간 표시
+                String timeLabel = String.format("%02d:00 ~ %02d:00", 9 + i, 10 + i);
+                
+                if (lectures != null && i < lectures.length && lectures[i] != null) {
+                    Lecture l = lectures[i];
+                    btn.setText("<html><b>" + timeLabel + "</b><br>&nbsp;&nbsp;" + l.getTitle() + " (" + l.getProfessor() + ")</html>");
+                    btn.setBackground(new Color(65, 105, 225)); // RoyalBlue
+                    btn.setForeground(Color.WHITE);
+                } else {
+                    btn.setText(timeLabel);
+                }
             }
         }
-        // 4. 오늘 하루치 데이터만 담긴 배열을 반환합니다.
-        return dailyData;
     }
 }

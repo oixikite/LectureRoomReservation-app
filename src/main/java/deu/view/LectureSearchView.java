@@ -2,8 +2,7 @@ package deu.view;
 
 import deu.model.dto.request.command.LectureCommandRequest;
 import deu.model.dto.request.data.lecture.LectureFilterRequest;
-import deu.model.dto.response.BasicResponse; // BasicResponse 임포트
-import deu.model.dto.response.LectureListResponse;
+import deu.model.dto.response.BasicResponse;
 import deu.model.entity.Lecture;
 
 import javax.swing.*;
@@ -14,7 +13,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList; // ArrayList 임포트
+import java.util.ArrayList;
 import java.util.List;
 
 public class LectureSearchView extends JFrame {
@@ -130,24 +129,27 @@ public class LectureSearchView extends JFrame {
 
             //요청 DTO 생성
             LectureFilterRequest filter = new LectureFilterRequest(year, semester, building, floor, room);
+            // [수정] DTO 필드명 변경에 맞춘 생성자 사용
             LectureCommandRequest request = new LectureCommandRequest("강의실 강의 조회", filter);
 
-            Object response = sendRequestToServer(request); // 헬퍼 메서드 호출
+            Object response = sendRequestToServer(request);
 
-            if (response instanceof LectureListResponse res) {
-                if ("200".equals(res.getStatus())) {
-                    // 🎯 [신규] 조회 결과를 멤버 변수에 저장
-                    this.currentLectureList = res.getLectures(); 
-                    
-                    updateTable(this.currentLectureList); // 🎯 저장된 리스트로 테이블 업데이트
-                    JOptionPane.showMessageDialog(this, "조회 완료! 총 " + this.currentLectureList.size() + "개 강의가 있습니다.");
+            // [수정] 서버가 BasicResponse를 반환하므로 이에 맞춰 처리
+            if (response instanceof BasicResponse res) {
+                if ("200".equals(res.code)) {
+                    // data를 List<Lecture>로 캐스팅
+                    if (res.data instanceof List) {
+                        this.currentLectureList = (List<Lecture>) res.data;
+                        updateTable(this.currentLectureList);
+                        JOptionPane.showMessageDialog(this, "조회 완료 (" + currentLectureList.size() + "건)");
+                    }
                 } else {
-                    this.currentLectureList.clear(); // 🎯 실패 시 리스트 비우기
-                    updateTable(this.currentLectureList); // 🎯 빈 테이블로 업데이트
-                    JOptionPane.showMessageDialog(this, "조회 실패: " + res.getMessage());
+                    this.currentLectureList.clear();
+                    updateTable(this.currentLectureList);
+                    JOptionPane.showMessageDialog(this, "조회 실패: " + res.data);
                 }
             } else {
-                 JOptionPane.showMessageDialog(this, "예상치 못한 응답 형식입니다.");
+                JOptionPane.showMessageDialog(this, "서버 응답 오류");
             }
 
         } catch (NumberFormatException ex) {
