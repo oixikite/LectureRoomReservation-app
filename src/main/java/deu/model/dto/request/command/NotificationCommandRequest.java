@@ -11,6 +11,7 @@ package deu.model.dto.request.command;
 import java.io.Serializable;
 
 public class NotificationCommandRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
     
     public String command; // 예: "알림 조회"
     public Object payload; // 예: 사용자 ID (String)

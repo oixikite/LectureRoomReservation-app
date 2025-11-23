@@ -3,6 +3,8 @@ package deu.model.dto.response;
 import java.io.Serializable;
 
 public class BasicResponse implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     public String code;
     public Object data;
 
