@@ -74,20 +74,26 @@ public abstract class AbstractCalendarViewTemplate extends SwingWorker<Object[],
     protected void done() {
         try {
             prepareCalendar();
-            Object[] data = get();
-            // 데이터가 null일 경우에 대비해 null 처리 후 호출
+            // [수정] get()을 직접 호출하지 않고 래퍼 메소드 사용 (테스트 오버라이드 허용)
+            Object[] data = getResult();            // 데이터가 null일 경우에 대비해 null 처리 후 호출
             applyScheduleToCalendar(
                     data[0],
                     data.length > 1 ? data[1] : null,
                     null
             );
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "캘린더 갱신 중 오류: " + e.getMessage());
         } finally {
             finalizeCalendar();
         }
     }
 
+    // [신규] 테스트에서 이 메소드를 오버라이드하여 가짜 데이터를 반환하도록 함
+    protected Object[] getResult() throws Exception {
+        return get(); // 실제 런타임에선 SwingWorker.get() 호출
+    }
+    
     // [Abstract] 하위 클래스에서 구현할 데이터 조회 메소드
     protected abstract Object fetchLectureData();
 
