@@ -23,7 +23,7 @@ import java.time.LocalDate;
  */
 public class DailyCalendarView extends AbstractCalendarViewTemplate {
     
-    private LocalDate targetDate;
+    private final LocalDate targetDate;
 
     public DailyCalendarView(CalendarViewContainer view, String building, String floor, String room, LocalDate date) {
         super(view, building, floor, room);

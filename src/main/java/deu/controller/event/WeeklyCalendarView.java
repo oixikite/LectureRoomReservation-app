@@ -140,7 +140,7 @@ public class WeeklyCalendarView extends AbstractCalendarViewTemplate {
                         });
                     }
                 }
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 // 무시
             }
         }

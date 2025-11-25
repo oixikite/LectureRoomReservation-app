@@ -7,6 +7,7 @@ package deu.controller.event;
 import deu.controller.business.LectureClientController;
 import deu.controller.business.RoomReservationClientController;
 
+import java.util.concurrent.ExecutionException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
@@ -14,6 +15,7 @@ import javax.swing.SwingWorker;
  *
  * @author oixikite
  */
+
 /**
  * 캘린더 뷰 템플릿 (주간, 월별, 일별 공통 로직)
  */
@@ -28,14 +30,37 @@ public abstract class AbstractCalendarViewTemplate extends SwingWorker<Object[],
     protected String floor;
     protected String room;
 
-    // [핵심 변경] 생성자 매개변수 타입 변경
+    /**
+     * [기존 생성자 유지]
+     * 기존 코드와의 호환성을 위해 유지하며, 내부적으로 아래의 protected 생성자를 호출합니다.
+     * 실제 앱 실행 시에는 싱글톤 인스턴스를 자동으로 주입합니다.
+     * @param view
+     * @param building
+     * @param floor
+     * @param room
+     */
     public AbstractCalendarViewTemplate(CalendarViewContainer view, String building, String floor, String room) {
+        this(view, building, floor, room, LectureClientController.getInstance(), RoomReservationClientController.getInstance());
+    }
+
+    /**
+     * [Refactoring - 신규 추가] 테스트를 위한 생성자 (Dependency Injection)
+     * 테스트 코드에서 컨트롤러(Mock 객체 등)를 직접 주입할 수 있도록 합니다.protected로 선언하여 외부(다른 패키지)에서의 무분별한 사용을 막고 상속/테스트에서만 사용합니다.
+     * @param view
+     * @param building
+     * @param floor
+     * @param room
+     * @param lectureClient
+     * @param reservationClient
+     */
+    protected AbstractCalendarViewTemplate(CalendarViewContainer view, String building, String floor, String room,
+                                           LectureClientController lectureClient, RoomReservationClientController reservationClient) {
         this.view = view;
-        this.lectureClient = LectureClientController.getInstance();
-        this.reservationClient = RoomReservationClientController.getInstance();
         this.building = building;
         this.floor = floor;
         this.room = room;
+        this.lectureClient = lectureClient;
+        this.reservationClient = reservationClient;
     }
 
     @Override
@@ -56,8 +81,7 @@ public abstract class AbstractCalendarViewTemplate extends SwingWorker<Object[],
                     data.length > 1 ? data[1] : null,
                     null
             );
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (InterruptedException | ExecutionException e) {
             JOptionPane.showMessageDialog(null, "캘린더 갱신 중 오류: " + e.getMessage());
         } finally {
             finalizeCalendar();
