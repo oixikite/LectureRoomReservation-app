@@ -238,7 +238,7 @@ public class Auth extends javax.swing.JFrame {
         login_name3.setFont(new java.awt.Font("Helvetica Neue", 0, 16)); // NOI18N
         login_name3.setForeground(new java.awt.Color(102, 102, 102));
         login_name3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        login_name3.setText("2분반 4조");
+        login_name3.setText("1분반 1조");
         teamPanel.add(login_name3);
         login_name3.setBounds(0, 10, 250, 40);
 
@@ -246,7 +246,7 @@ public class Auth extends javax.swing.JFrame {
         login_name4.setFont(new java.awt.Font("Helvetica Neue", 0, 16)); // NOI18N
         login_name4.setForeground(new java.awt.Color(102, 102, 102));
         login_name4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        login_name4.setText("<html>강준화 20212998<br>김영진 20213000<br>김원형 20212973<br>이시연 20223046<br>이건일 20233928</html>");
+        login_name4.setText("<html>설효주 20233016<br>이시연 20223046<br>양세음 20213022<br></html>");
         teamPanel.add(login_name4);
         login_name4.setBounds(0, 40, 250, 150);
 

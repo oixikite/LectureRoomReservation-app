@@ -380,7 +380,7 @@
                   <Color blue="66" green="66" red="66" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="2&#xbd84;&#xbc18; 4&#xc870;"/>
+                <Property name="text" type="java.lang.String" value="1&#xbd84;&#xbc18; 1&#xc870;"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -400,7 +400,7 @@
                   <Color blue="66" green="66" red="66" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xac15;&#xc900;&#xd654; 20212998&lt;br&gt;&#xae40;&#xc601;&#xc9c4; 20213000&lt;br&gt;&#xae40;&#xc6d0;&#xd615; 20212973&lt;br&gt;&#xc774;&#xc2dc;&#xc5f0; 20223046&lt;br&gt;&#xc774;&#xac74;&#xc77c; 20233928&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xc124;&#xd6a8;&#xc8fc; 20233016&lt;br&gt;&#xc774;&#xc2dc;&#xc5f0; 20223046&lt;br&gt;&#xc591;&#xc138;&#xc74c; 20213022&lt;br&gt;&lt;/html&gt;"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
