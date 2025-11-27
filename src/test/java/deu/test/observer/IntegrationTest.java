@@ -65,7 +65,9 @@ public class IntegrationTest {
             @Override
             public void onNotificationReceived(List<NotificationDTO> notifications) {
                 System.out.println("\n[Observer] 서버로부터 알림 수신 성공!");
-                System.out.println("알림 내용: " + notifications.get(0).getMessage());
+                for (NotificationDTO dto : notifications) {
+                    System.out.println("   [" + dto.getTitle() + "] " + dto.getMessage());
+                }
                 
                 // 3. 알림을 받으면 빗장을 풂 (대기 해제)
                 latch.countDown(); 
@@ -75,6 +77,8 @@ public class IntegrationTest {
         // 4. 서비스 시작
         service.addObserver(testObserver);
         service.start(TEST_USER_ID);
+        System.out.println("[대기 중] " + TIMEOUT_SECONDS + "초 안에 이벤트를 발생시키세요!");
+        System.out.println("1. 관리자(m-admin)로 로그인하세요.");
         System.out.println("폴링 시작됨. [" + TEST_USER_ID + "] 계정의 알림을 대기합니다...");
         System.out.println("지금 관리자 프로그램에서 [" + TEST_USER_ID + "]의 예약을 승인/삭제 해주세요!");
 
