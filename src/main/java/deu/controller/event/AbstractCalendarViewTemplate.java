@@ -74,16 +74,21 @@ public abstract class AbstractCalendarViewTemplate extends SwingWorker<Object[],
     protected void done() {
         try {
             prepareCalendar();
-            // [수정] get()을 직접 호출하지 않고 래퍼 메소드 사용 (테스트 오버라이드 허용)
-            Object[] data = getResult();            // 데이터가 null일 경우에 대비해 null 처리 후 호출
+            Object[] data = getResult(); // 여기서 예외가 발생하면 catch 블록으로 이동
+            
             applyScheduleToCalendar(
                     data[0],
                     data.length > 1 ? data[1] : null,
                     null
             );
         } catch (Exception e) {
+            // [수정] 시스템 오류 발생 시 사용자에게 알림 팝업 표시
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "캘린더 갱신 중 오류: " + e.getMessage());
+            String msg = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
+            JOptionPane.showMessageDialog(view.getCalendarPanel(), 
+                    "데이터 조회 중 오류가 발생했습니다.\n" + msg, 
+                    "시스템 오류", 
+                    JOptionPane.ERROR_MESSAGE);
         } finally {
             finalizeCalendar();
         }

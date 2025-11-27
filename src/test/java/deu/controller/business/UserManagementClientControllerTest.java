@@ -20,7 +20,7 @@ public class UserManagementClientControllerTest {
     private Thread mockServerThread;
 
     @BeforeEach
-    void setup() {
+    void setup() {       
         if (mockServerThread != null && mockServerThread.isAlive()) return; // 이미 실행 중이면 패스
 
         mockServerThread = new Thread(() -> {
@@ -54,7 +54,7 @@ public class UserManagementClientControllerTest {
         mockServerThread.setDaemon(true);
         mockServerThread.start();
     }
-
+ 
     @DisplayName("사용자 수정 요청 시 정상 응답 코드 확인")
     @Test
     void testUpdateUser() {

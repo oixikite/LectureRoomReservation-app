@@ -35,10 +35,21 @@ public class DailyCalendarView extends AbstractCalendarViewTemplate {
         BasicResponse res = LectureClientController.getInstance()
                 .returnLectureOfDay(building, floor, room, targetDate);
         
-        if (res != null && "200".equals(res.code) && res.data instanceof Lecture[]) {
-            return res.data;
+        // [수정] 응답 코드 검증 로직 강화
+        if (res == null) {
+             throw new RuntimeException("응답이 없습니다.");
         }
-        return new Lecture[13];
+        
+        // 성공(200)일 때만 데이터 반환
+        if ("200".equals(res.code) && res.data instanceof Lecture[]) {
+            return res.data;
+        } else if ("200".equals(res.code)) {
+             // 데이터가 없어서 빈 리스트가 온 경우 (정상) -> 빈 배열 반환
+             return new Lecture[13];
+        } else {
+            // [핵심] 500 등 에러 코드인 경우 예외 발생 -> 팝업으로 이어짐
+            throw new RuntimeException(res.data.toString());
+        }
     }
 
     @Override
