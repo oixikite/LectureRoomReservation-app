@@ -42,9 +42,11 @@ public class LectureClientController {
         return sendRequest("일간 강의 조회", new LectureDateRequest(building, floor, lectureroom, targetDate));
     }
 
-    // 통신 중복 코드 제거 메소드
+    // 통신 중복 코드 제거 메소드 (수정됨)
     private BasicResponse sendRequest(String command, Object payload) {
-        try (Socket socket = new Socket(host, port); ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream()); ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+        try (Socket socket = new Socket(host, port); 
+             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream()); 
+             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
             LectureCommandRequest req = new LectureCommandRequest(command, payload);
             out.writeObject(req);
@@ -55,7 +57,9 @@ public class LectureClientController {
             }
         } catch (Exception e) {
             System.out.println("서버 통신 실패 [" + command + "]: " + e.getMessage());
+            // [수정] null 대신 500 에러 객체 반환
+            return new BasicResponse("500", "서버 연결 실패: " + e.getMessage());
         }
-        return null;
+        return new BasicResponse("500", "알 수 없는 서버 응답입니다.");
     }
 }

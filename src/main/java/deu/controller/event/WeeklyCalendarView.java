@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package deu.controller.event;
 
 import deu.model.dto.response.BasicResponse;
@@ -14,11 +10,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-
-/**
- *
- * @author oixikite
- */
 
 /**
  * [구상 클래스] '주별' 캘린더 뷰를 구현합니다.
@@ -49,21 +40,23 @@ public class WeeklyCalendarView extends AbstractCalendarViewTemplate {
 
     @Override
     protected void applyScheduleToCalendar(Object lectureData, Object reservationData, Object labelData) {
+
         Lecture[][] lectures = (Lecture[][]) lectureData;
         RoomReservation[][] reservations = (RoomReservation[][]) reservationData;
-        
+
         Reservation resView = (view instanceof Reservation) ? (Reservation) view : null;
 
         for (Component comp : view.getCalendarPanel().getComponents()) {
+
             if (!(comp instanceof TimeSlotButton dayBtn)) continue;
-            
+
             for (ActionListener al : dayBtn.getActionListeners()) {
                 dayBtn.removeActionListener(al);
             }
 
-            String name = dayBtn.getName(); 
+            String name = dayBtn.getName();
             if (name == null || !name.startsWith("day")) continue;
-            
+
             try {
                 String[] parts = name.substring(3).split("_");
                 int day = Integer.parseInt(parts[0]);
@@ -71,78 +64,121 @@ public class WeeklyCalendarView extends AbstractCalendarViewTemplate {
 
                 int startHour = 9 + period;
                 String timeLabel = String.format("%02d:00", startHour);
-                
+
                 dayBtn.setText(timeLabel);
                 dayBtn.setOpaque(true);
                 dayBtn.setContentAreaFilled(true);
-                dayBtn.setForeground(Color.BLACK); 
+                dayBtn.setForeground(Color.BLACK);
                 dayBtn.setLecture(null);
                 dayBtn.setRoomReservation(null);
-                dayBtn.setEnabled(true); 
+                dayBtn.setEnabled(true);
                 dayBtn.setBackground(Color.WHITE);
                 dayBtn.setOriginalBackground(Color.WHITE);
 
                 Lecture lecture = (lectures != null && lectures[day] != null) ? lectures[day][period] : null;
                 RoomReservation reservation = (reservations != null && reservations[day] != null) ? reservations[day][period] : null;
 
-                // 1. 강의 (진한 파랑)
+                //-------------------------------------------------
+                // ① 강의 (파랑)
+                //-------------------------------------------------
                 if (lecture != null) {
                     dayBtn.setLecture(lecture);
                     dayBtn.setText("<html><center>" + lecture.getTitle() + "</center></html>");
-                    
-                    Color lectureColor = new Color(65, 105, 225); // RoyalBlue
-                    dayBtn.setBackground(lectureColor); 
+
+                    Color lectureColor = new Color(65, 105, 225);
+                    dayBtn.setBackground(lectureColor);
                     dayBtn.setOriginalBackground(lectureColor);
-                    dayBtn.setForeground(Color.WHITE); 
-                } 
-                // 2. 예약 (진한 초록 / 밝은 노랑)
-                else if (reservation != null) {
+                    dayBtn.setForeground(Color.WHITE);
+
+                //-------------------------------------------------
+                // ② 예약 있음 (초록 / 노랑) → 클릭 가능하게 추가 처리
+                //-------------------------------------------------
+                } else if (reservation != null) {
+
                     dayBtn.setRoomReservation(reservation);
                     dayBtn.setText("<html><center>" + reservation.getTitle() + "</center></html>");
-                    
+
+                    // 승인된 예약
                     if ("승인".equals(reservation.getStatus())) {
-                        Color approvedColor = new Color(34, 139, 34); // ForestGreen
-                        dayBtn.setBackground(approvedColor); 
+                        Color approvedColor = new Color(34, 139, 34);
+                        dayBtn.setBackground(approvedColor);
                         dayBtn.setOriginalBackground(approvedColor);
-                        dayBtn.setForeground(Color.WHITE); 
+                        dayBtn.setForeground(Color.WHITE);
+
+                    // 대기 예약
                     } else {
-                        // [수정] 밝은 노란색 (Gold보다 약간 밝은 느낌) - 검정 글씨가 잘 보임
-                        Color pendingColor = new Color(255, 215, 0); // Gold
-                        dayBtn.setBackground(pendingColor); 
+                        Color pendingColor = new Color(255, 215, 0);
+                        dayBtn.setBackground(pendingColor);
                         dayBtn.setOriginalBackground(pendingColor);
-                        dayBtn.setForeground(Color.BLACK); // 밝은 노랑 위에는 검정 글씨가 가독성 좋음
+                        dayBtn.setForeground(Color.BLACK);
                     }
-                } 
-                // 3. 빈 칸 (예약 가능)
-                else {
+
+                    // ⭐ 예약 있는 칸 클릭 가능하게 만드는 부분 ⭐
                     if (resView != null) {
                         dayBtn.addActionListener(e -> {
+
+                            // 이전 선택 복원
                             if (resView.getSelectedCalendarButton() != null) {
                                 TimeSlotButton prev = (TimeSlotButton) resView.getSelectedCalendarButton();
-                                prev.setBackground(prev.getOriginalBackground() != null ? prev.getOriginalBackground() : Color.WHITE);
+                                prev.setBackground(prev.getOriginalBackground());
                                 prev.setForeground(Color.BLACK);
                             }
-                            
-                            dayBtn.setBackground(new Color(30, 144, 255)); 
+
+                            // 현재 선택 디자인
+                            dayBtn.setBackground(new Color(30, 144, 255));
                             dayBtn.setForeground(Color.WHITE);
                             resView.setSelectedCalendarButton(dayBtn);
-                            
-                            LocalDate targetDate = LocalDate.now().plusDays(day); 
+
+                            // 필드 채우기
+                            LocalDate targetDate = LocalDate.now().plusDays(day);
                             String startTimeStr = String.format("%02d:00", 9 + period);
                             String endTimeStr = String.format("%02d:00", 10 + period);
-                            
+
                             resView.getReservationDateField().setText(targetDate.toString());
                             resView.getReservationTimeField().setText(startTimeStr + " ~ " + endTimeStr);
-                            
+
+                            if (resView.getUpdateButton() != null) {
+                                resView.getUpdateButton().setEnabled(true);
+                            }
+                        });
+                    }
+
+                //-------------------------------------------------
+                // ③ 빈 칸 (흰색, 예약 가능)
+                //-------------------------------------------------
+                } else {
+
+                    if (resView != null) {
+                        dayBtn.addActionListener(e -> {
+
+                            // 이전 선택 복원
+                            if (resView.getSelectedCalendarButton() != null) {
+                                TimeSlotButton prev = (TimeSlotButton) resView.getSelectedCalendarButton();
+                                prev.setBackground(prev.getOriginalBackground());
+                                prev.setForeground(Color.BLACK);
+                            }
+
+                            // 현재 선택 표시
+                            dayBtn.setBackground(new Color(30, 144, 255));
+                            dayBtn.setForeground(Color.WHITE);
+                            resView.setSelectedCalendarButton(dayBtn);
+
+                            // 필드 채움
+                            LocalDate targetDate = LocalDate.now().plusDays(day);
+                            String startTimeStr = String.format("%02d:00", 9 + period);
+                            String endTimeStr = String.format("%02d:00", 10 + period);
+
+                            resView.getReservationDateField().setText(targetDate.toString());
+                            resView.getReservationTimeField().setText(startTimeStr + " ~ " + endTimeStr);
+
                             if (resView.getUpdateButton() != null) {
                                 resView.getUpdateButton().setEnabled(true);
                             }
                         });
                     }
                 }
-            } catch (Exception e) {
-                // 무시
-            }
+
+            } catch (Exception ignored) {}
         }
     }
 }

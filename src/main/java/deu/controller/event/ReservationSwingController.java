@@ -191,7 +191,7 @@ public class ReservationSwingController {
     }
 
     // =================================================================================================================
-    // 예약하는 버튼 기능
+      // 예약 버튼 클릭 시 실행되는 로직 (유효성 검사 강화)
     private void handleReservation(ActionEvent e) {
         if (!validateReservationInput()) {
             return;
@@ -220,45 +220,92 @@ public class ReservationSwingController {
             return;
         }
 
-        // [추가] 사용 목적 입력
-        String purpose = JOptionPane.showInputDialog(null, "사용 목적을 입력하세요:", "추가 정보", JOptionPane.QUESTION_MESSAGE);
-        if (purpose == null) {
-            purpose = ""; // 취소 시 빈 문자열
+        // [Step 1] 사용 목적 입력 (재입력 로직 적용)
+        String purpose = null;
+        while (true) {
+            purpose = JOptionPane.showInputDialog(null, "사용 목적을 입력하세요:", "추가 정보 (1/3)", JOptionPane.QUESTION_MESSAGE);
+            
+            // 취소 버튼 누름 -> 예약 종료
+            if (purpose == null) {
+                JOptionPane.showMessageDialog(null, "예약 신청이 취소되었습니다.");
+                return; 
+            }
+            
+            // 공백 입력 -> 경고 후 재입력
+            if (purpose.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "사용 목적은 필수 입력 사항입니다.\n다시 입력해주세요.", "입력 오류", JOptionPane.WARNING_MESSAGE);
+                continue; // 다시 입력창 띄움
+            }
+            break; // 유효값 입력 시 탈출
         }
-        // [추가] 동반 학생 수 입력
+        
+        // [Step 2] 동반 사용자 수 입력 (재입력 로직 적용)
         int accompanyingStudentCount = 0;
-        try {
-            String countStr = JOptionPane.showInputDialog(null, "동반 학생 수를 입력하세요 (없으면 0):", "추가 정보", JOptionPane.QUESTION_MESSAGE);
-            if (countStr != null && !countStr.trim().isEmpty()) {
+        while (true) {
+            String countStr = JOptionPane.showInputDialog(null, "동반 학생 수를 입력하세요 (없으면 0):", "추가 정보 (2/3)", JOptionPane.QUESTION_MESSAGE);
+            
+            if (countStr == null) {
+                JOptionPane.showMessageDialog(null, "예약 신청이 취소되었습니다.");
+                return;
+            }
+            
+            if (countStr.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "인원 수를 입력해주세요.", "입력 오류", JOptionPane.WARNING_MESSAGE);
+                continue;
+            }
+
+            try {
                 accompanyingStudentCount = Integer.parseInt(countStr.trim());
+                if (accompanyingStudentCount < 0) throw new NumberFormatException();
+                break; // 성공 시 탈출
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "0 이상의 올바른 숫자를 입력해주세요.", "형식 오류", JOptionPane.WARNING_MESSAGE);
             }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, "숫자만 입력 가능합니다. 0명으로 처리됩니다.");
         }
 
-        // [추가] 동반 학생 정보 입력
+        // [Step 3] 동동반 사용자 상세 정보 입력 (재입력 로직 적용)
         List<AccompanyingStudent> accompanyingStudents = new ArrayList<>();
+        
         for (int i = 0; i < accompanyingStudentCount; i++) {
-            JTextField idField = new JTextField();
-            JTextField nameField = new JTextField();
-            Object[] message = {
-                (i + 1) + "번째 학생 학번:", idField,
-                (i + 1) + "번째 학생 성명:", nameField
-            };
+            boolean validStudentInput = false;
+            
+            // 한 명의 정보를 제대로 입력할 때까지 무한 반복
+            while (!validStudentInput) {
+                JTextField idField = new JTextField();
+                JTextField nameField = new JTextField();
+                Object[] message = {
+                    (i + 1) + "번째 학생 학번:", idField,
+                    (i + 1) + "번째 학생 성명:", nameField
+                };
 
-            int option = JOptionPane.showConfirmDialog(null, message, "동반 학생 정보 입력", JOptionPane.OK_CANCEL_OPTION);
-            if (option == JOptionPane.OK_OPTION) {
-                accompanyingStudents.add(new AccompanyingStudent(idField.getText(), nameField.getText()));
-            } else {
-                break; // 입력 취소 시 중단
+                int option = JOptionPane.showConfirmDialog(null, message, 
+                        "동반 학생 정보 입력 (" + (i + 1) + "/" + accompanyingStudentCount + ")", 
+                        JOptionPane.OK_CANCEL_OPTION);
+
+                // 취소 버튼 -> 전체 예약 종료
+                if (option != JOptionPane.OK_OPTION) {
+                    JOptionPane.showMessageDialog(null, "예약 신청이 취소되었습니다.");
+                    return; 
+                }
+
+                String studentId = idField.getText().trim();
+                String studentName = nameField.getText().trim();
+
+                // 빈 칸 존재 -> 경고 후 재입력 (Loop)
+                if (studentId.isEmpty() || studentName.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "학번과 성명은 필수 입력입니다.\n다시 입력해주세요.", "필수 정보 누락", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    accompanyingStudents.add(new AccompanyingStudent(studentId, studentName));
+                    validStudentInput = true; // 다음 학생으로 이동
+                }
             }
         }
 
-        // [수정] RoomReservationRequest 생성자 호출 시 추가된 정보 전달
+        // [Step 4] 모든 검증 통과 -> 객체 생성 및 서버 전송
         RoomReservationRequest reservationRequest = new RoomReservationRequest(
                 building, floor, lectureRoom, title, description,
                 reservationDate, dayName, startTime, endTime, userNumber,
-                purpose, accompanyingStudentCount, accompanyingStudents // 추가된 인자들
+                purpose, accompanyingStudentCount, accompanyingStudents 
         );
 
         SwingWorker<BasicResponse, Void> worker = new SwingWorker<>() {
@@ -272,19 +319,23 @@ public class ReservationSwingController {
                 try {
                     BasicResponse response = get();
                     switch (response.code) {
-                        case "200" ->
+                        case "200":
                             JOptionPane.showMessageDialog(null, response.data, "예약 완료", JOptionPane.INFORMATION_MESSAGE);
-                        case "409" ->
+                            refreshReservationWriteDataFieldForCalendar();
+                            currentViewType = "WEEKLY";
+                            runCalendarUpdate("WEEKLY");
+                            break;
+                        case "409":
                             JOptionPane.showMessageDialog(null, response.data, "예약 중복 오류", JOptionPane.WARNING_MESSAGE);
-                        case "403" ->
+                            break;
+                        case "403":
                             JOptionPane.showMessageDialog(null, response.data, "예약 제한 초과", JOptionPane.WARNING_MESSAGE);
-                        default ->
+                            break;
+                        default:
                             JOptionPane.showMessageDialog(null, response.data, "서버 오류 또는 예외", JOptionPane.ERROR_MESSAGE);
+                            break;
                     }
-                    refreshReservationWriteDataFieldForCalendar();
-                    // [수정] 예약 후에는 무조건 메인 화면(주간 뷰)을 갱신해야 합니다.
-                    currentViewType = "WEEKLY";
-                    runCalendarUpdate("WEEKLY");                } catch (Exception ex) {
+                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "예약 요청 처리 중 예외 발생: " + ex.getMessage(), "오류", JOptionPane.ERROR_MESSAGE);
                 }
             }

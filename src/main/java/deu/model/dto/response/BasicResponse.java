@@ -12,4 +12,13 @@ public class BasicResponse implements Serializable {
         this.code = code;
         this.data = data;
     }
+
+   // [수정] 올바른 Getter 구현 추가
+    public String getCode() {
+        return this.code;
+    }
+
+    public Object getData() {
+        return this.data;
+    }
 }
